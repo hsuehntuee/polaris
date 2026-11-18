@@ -55,7 +55,7 @@ finally {
 Step "collect release files → $OutDir"
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 $apk = Join-Path $root 'TownPass\build\app\outputs\flutter-apk\app-release.apk'
-Copy-Item $apk (Join-Path $OutDir 'PopPal-Polaris-offline.apk') -Force
+Copy-Item $apk (Join-Path $OutDir 'Polaris-offline.apk') -Force
 Copy-Item $gguf (Join-Path $OutDir 'gemma-3-270m-decider-Q8_0.gguf') -Force
 $sums = Get-ChildItem $OutDir -File | Where-Object { $_.Extension -in '.apk', '.gguf', '.zip' } | ForEach-Object {
   '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 $_.FullName).Hash.ToLower(), $_.Name

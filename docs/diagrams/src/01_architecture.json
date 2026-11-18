@@ -7,7 +7,7 @@
  "text_policy": "strict",
  "width": 1400,
  "height": 950,
- "title": "PopPal 系統架構",
+ "title": "Polaris 系統架構",
  "subtitle": "語音、翻譯、決策模型與服務網頁全部在手機上執行，飛航模式可用",
  "containers": [
   {

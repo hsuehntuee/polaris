@@ -1,9 +1,9 @@
-# PopPal — Polaris 城市通小幫手
+# Polaris 台北通小幫手
 
 > 說一句話，找到對的市政服務；再框住真正的欄位，陪你一步一步做完。
 > 語音、翻譯、決策模型、服務網頁全部在手機上執行，飛航模式也能用。
 
-臺北通 TownPass 2026 黑客松作品 · 程式碼：<https://github.com/taipei-doit/townpass2026-PopPal> · 安裝檔與模型權重：本 repo 的 **Releases**
+臺北通 TownPass 2026 黑客松作品 · 程式碼（市府 repo）：<https://github.com/taipei-doit/townpass2026-PopPal> · 安裝檔與模型權重：本 repo 的 **Releases**
 
 ---
 
@@ -134,7 +134,7 @@ Polaris 的做法是在原本的城市通上**疊一層陪伴**，不改寫任�
 
 #### 方式 A：直接安裝（最快）
 
-1. 到本 repo 的 **Releases** 下載 `PopPal-Polaris-offline.apk`。
+1. 到本 repo 的 **Releases** 下載 `Polaris-offline.apk`。
 2. 在 Android 手機上安裝（需允許「安裝不明來源的應用程式」）。
 3. 打開 TownPass → 首頁或「服務」裡的 **小幫手**。第一次使用麥克風請選「使用 App 時允許」。
 

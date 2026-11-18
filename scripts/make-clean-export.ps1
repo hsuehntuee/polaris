@@ -4,8 +4,8 @@
 #   - 匯出後掃一次敏感字串，有命中就停下來
 #   - 只做到 git init，不 commit、不 push（由你手動）
 #
-#   .\scripts\make-clean-export.ps1                          # 匯出到 ..\townpass2026-PopPal
-#   .\scripts\make-clean-export.ps1 -Dest D:\out\PopPal
+#   .\scripts\make-clean-export.ps1                          # 匯出到 ..\Polaris-upload
+#   .\scripts\make-clean-export.ps1 -Dest D:\out\Polaris
 #   .\scripts\make-clean-export.ps1 -Force                   # 目的資料夾已存在時先清空
 param(
   [string]$Dest = '',
@@ -13,7 +13,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-if (-not $Dest) { $Dest = Join-Path (Split-Path -Parent $root) 'townpass2026-PopPal' }
+if (-not $Dest) { $Dest = Join-Path (Split-Path -Parent $root) 'Polaris-upload' }
 
 if (Test-Path $Dest) {
   if (-not $Force) { throw "目的資料夾已存在：$Dest（加 -Force 會先清空）" }
