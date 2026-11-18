@@ -7,8 +7,8 @@
  "text_policy": "strict",
  "width": 1400,
  "height": 750,
- "title": "陪伴引導：找到該點哪裡，再決定陪多少",
- "subtitle": "引導層疊在原本的服務頁上；服務本身不用改，由使用者自己操作",
+ "title": "陪伴引導",
+ "subtitle": "引導層疊加在原服務頁上，由使用者自行操作",
  "containers": [
   {
    "id": "A",
@@ -16,7 +16,7 @@
    "y": 110,
    "width": 1320,
    "height": 140,
-   "label": "① 找該點哪裡（三層，依序嘗試）"
+   "label": "① 三層定位，依序嘗試"
   },
   {
    "id": "B",
@@ -24,7 +24,7 @@
    "y": 300,
    "width": 1320,
    "height": 140,
-   "label": "② 框住真正的欄位"
+   "label": "② 標示目標欄位"
   },
   {
    "id": "C",
@@ -32,7 +32,7 @@
    "y": 490,
    "width": 1320,
    "height": 140,
-   "label": "③ 陪伴節奏"
+   "label": "③ 引導強度"
   }
  ],
  "nodes": [
@@ -57,7 +57,7 @@
    "width": 200,
    "height": 70,
    "label": "導覽腳本",
-   "sublabel": "31 份・文字／標籤定位",
+   "sublabel": "31 份・文字與標籤定位",
    "fill": "#ffffff",
    "stroke": "#cbd5e1",
    "flat": true
@@ -96,7 +96,7 @@
    "width": 200,
    "height": 70,
    "label": "只給文字說明",
-   "sublabel": "絕不框空白處",
+   "sublabel": "不標示任何位置",
    "fill": "#fef2f2",
    "stroke": "#ef4444",
    "flat": true
@@ -281,8 +281,5 @@
    "flow": "feedback",
    "label": "退一步或條件觸發"
   }
- ],
- "footer": "隨時可以按「我自己來」結束；送出被頁面退回時，回頭框出錯的欄位",
- "footer_x": 48,
- "footer_y": 710
+ ]
 }

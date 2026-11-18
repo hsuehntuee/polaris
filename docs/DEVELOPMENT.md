@@ -25,7 +25,7 @@ One-shot release build (web apps → APK assets, llama-server + model → APK, `
 
 ## Rebuild from scratch
 
-Prerequisites: Node 20 + pnpm, Python 3.11, Flutter 3.47 (fvm), JDK 17, Android platform-tools, Android NDK r29.
+Prerequisites: Node 20 + pnpm, Python 3.12, Flutter 3.47.6 (fvm), JDK 17, Android SDK platform-tools. Step-by-step migration, data regeneration and retraining: `docs/MAINTENANCE.md` (Traditional Chinese).
 
 Not in git (download or regenerate):
 

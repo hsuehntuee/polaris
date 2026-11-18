@@ -7,8 +7,8 @@
  "text_policy": "strict",
  "width": 1400,
  "height": 940,
- "title": "訓練管線：資料怎麼來、模型怎麼進手機",
- "subtitle": "兩個模型都只學「選一個」；服務改版時重爬、重訓幾分鐘就好",
+ "title": "訓練管線",
+ "subtitle": "兩個模型共用同一批服務訓練句，輸出都是單一選項",
  "containers": [
   {
    "id": "A",
@@ -328,8 +328,5 @@
    "flow": "feedback",
    "label": "評測"
   }
- ],
- "footer": "訓練與推論用同一份 prompt，一字不差；測試句已和訓練句去重",
- "footer_x": 48,
- "footer_y": 900
+ ]
 }

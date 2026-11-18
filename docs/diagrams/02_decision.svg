@@ -44,8 +44,8 @@
     </style>
   </defs>
   <rect data-graph-role="background" width="1400.0" height="750.0" fill="#ffffff"/>
-  <text x="700.0" y="56" text-anchor="middle" class="title">決策流程：從一句話到「要去哪裡」</text>
-  <text x="700.0" y="82" text-anchor="middle" class="subtitle">模型只做選擇題：一次算出每個工具代號的機率，再交給固定的規則決定</text>
+  <text x="700.0" y="56" text-anchor="middle" class="title">決策流程</text>
+  <text x="700.0" y="82" text-anchor="middle" class="subtitle">一次推論取得每個工具代號的機率，再依固定規則決定下一步</text>
   <g id="A" data-graph-role="container" data-container-id="A" data-semantic-role="boundary" data-graph-bounds="40,110,1360,250">
   <rect data-graph-role="container" x="40.0" y="110.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
   <text x="58.0" y="134.0" class="section">① 算出機率分布</text>
@@ -53,13 +53,13 @@
   </g>
   <g id="B" data-graph-role="container" data-container-id="B" data-semantic-role="boundary" data-graph-bounds="40,300,1360,440">
   <rect data-graph-role="container" x="40.0" y="300.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="324.0" class="section">② 決策規則（門檻 0.75）</text>
-    <rect id="B-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="177.68" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="324.0" class="section">② 決策規則，門檻 0.75</text>
+    <rect id="B-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="164.68" height="30" fill="none" stroke="none"/>
   </g>
   <g id="C" data-graph-role="container" data-container-id="C" data-semantic-role="boundary" data-graph-bounds="40,490,1360,630">
   <rect data-graph-role="container" x="40.0" y="490.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="514.0" class="section">③ 三種結果，下一步都由使用者決定</text>
-    <rect id="C-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="496" width="237.22" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="514.0" class="section">③ 三種結果，下一步由使用者決定</text>
+    <rect id="C-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="496" width="224.22" height="30" fill="none" stroke="none"/>
   </g>
   <path id="e0" data-graph-role="edge" data-edge-id="e0" data-source="say" data-target="lang" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 260,191 L 330,191" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
   <path id="e1" data-graph-role="edge" data-edge-id="e1" data-source="lang" data-target="llm" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 530,191 L 600,191" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
@@ -111,7 +111,7 @@
   <g id="node-go" data-graph-role="node" data-node-id="go" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,536,800,606">
   <rect x="600.0" y="536.0" width="200.0" height="70.0" rx="10.0" fill="#f0fdfa" stroke="#14b8a6" stroke-width="1.8"/>
   <text data-text-role="title" data-full-text="直接去" data-text-max-width="176.0" x="700.0" y="571.0" text-anchor="middle" class="node-title" font-size="18">直接去</text>
-  <text data-text-role="subtitle" data-full-text="確認卡：要去【X】嗎？" data-text-max-width="176.0" x="700.0" y="593.0" text-anchor="middle" class="node-sub" font-size="12">確認卡：要去【X】嗎？</text>
+  <text data-text-role="subtitle" data-full-text="先顯示確認卡" data-text-max-width="176.0" x="700.0" y="593.0" text-anchor="middle" class="node-sub" font-size="12">先顯示確認卡</text>
   </g>
   <g id="node-none" data-graph-role="node" data-node-id="none" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="870,536,1070,606">
   <rect x="870.0" y="536.0" width="200.0" height="70.0" rx="10.0" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8"/>
@@ -158,8 +158,5 @@
     <text data-graph-role="decoration" x="204.0" y="664.0" class="legend">機率</text>
     <line data-graph-role="decoration" x1="256.0" y1="660.0" x2="286.0" y2="660.0" stroke="#ef4444" stroke-width="2.4" marker-end="url(#arrowG)"/>
     <text data-graph-role="decoration" x="296.0" y="664.0" class="legend">出口</text>
-  </g>
-  <g id="footer" data-graph-role="reserved" data-graph-bounds="48,698,230,714">
-  <text x="48.0" y="710.0" class="footnote">按「不是」只把該選項歸零、重新排序，不必再跑一次模型</text>
   </g>
 </svg>

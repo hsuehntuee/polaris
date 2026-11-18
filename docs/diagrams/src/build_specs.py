@@ -37,13 +37,15 @@ def spec(name, title, subtitle, bands, nodes, arrows, legend, footer):
     d = dict(schema_version=1, mode='architecture', template_type='architecture', style=1, quality_profile='showcase',
              text_policy='strict', width=1400, height=h, title=title, subtitle=subtitle, containers=containers,
              nodes=out, arrows=arr, legend_orientation='horizontal', legend_x=48, legend_y=h - 90, legend_locked=True,
-             legend=[dict(flow=f, label=l) for f, l in legend], footer=footer, footer_x=48, footer_y=h - 40)
+             legend=[dict(flow=f, label=l) for f, l in legend])
+    if footer:
+        d.update(footer=footer, footer_x=48, footer_y=h - 40)
     with open(os.path.join(HERE, name + '.json'), 'w', encoding='utf-8') as fh:
         json.dump(d, fh, ensure_ascii=False, indent=1)
 
 
-spec('02_decision', '決策流程：從一句話到「要去哪裡」', '模型只做選擇題：一次算出每個工具代號的機率，再交給固定的規則決定',
-     [('A', '① 算出機率分布'), ('B', '② 決策規則（門檻 0.75）'), ('C', '③ 三種結果，下一步都由使用者決定')],
+spec('02_decision', '決策流程', '一次推論取得每個工具代號的機率，再依固定規則決定下一步',
+     [('A', '① 算出機率分布'), ('B', '② 決策規則，門檻 0.75'), ('C', '③ 三種結果，下一步由使用者決定')],
      [('say', 0, 'A', '一句話', '語音或打字', 'blue', 'user_avatar'),
       ('lang', 1, 'A', '語言判斷', '外語先翻成中文'),
       ('llm', 2, 'A', '決策器', 'Gemma 只算 1 個 token', 'violet', 'double_rect'),
@@ -51,7 +53,7 @@ spec('02_decision', '決策流程：從一句話到「要去哪裡」', '模型�
       ('fuse', 4, 'A', '查表融合', '講到項目名就拉高'),
       ('rule', 2, 'B', '決策規則', '比較前三名的機率', 'orange'),
       ('ask', 1, 'C', '追問', '2～3 顆按鈕・最多兩輪', 'blue'),
-      ('go', 2, 'C', '直接去', '確認卡：要去【X】嗎？', 'teal'),
+      ('go', 2, 'C', '直接去', '先顯示確認卡', 'teal'),
       ('none', 3, 'C', '找不到', '看全部服務・撥 1999', 'red')],
      [('say', 'right', 'lang', 'left', 'control', '文字'),
       ('lang', 'right', 'llm', 'left', 'control', '中文'),
@@ -62,15 +64,15 @@ spec('02_decision', '決策流程：從一句話到「要去哪裡」', '模型�
       ('rule', 'bottom', 'go', 'top', 'control', '第一名 ≥ 0.75'),
       ('rule', 'right', 'none', 'top', 'feedback', '其他')],
      [('control', '判斷流程'), ('data', '機率'), ('feedback', '出口')],
-     '按「不是」只把該選項歸零、重新排序，不必再跑一次模型')
+     '')
 
-spec('03_companion', '陪伴引導：找到該點哪裡，再決定陪多少', '引導層疊在原本的服務頁上；服務本身不用改，由使用者自己操作',
-     [('A', '① 找該點哪裡（三層，依序嘗試）'), ('B', '② 框住真正的欄位'), ('C', '③ 陪伴節奏')],
+spec('03_companion', '陪伴引導', '引導層疊加在原服務頁上，由使用者自行操作',
+     [('A', '① 三層定位，依序嘗試'), ('B', '② 標示目標欄位'), ('C', '③ 引導強度')],
      [('start', 0, 'A', '這一步的目標', '例：輸入水號', 'blue'),
-      ('script', 1, 'A', '導覽腳本', '31 份・文字／標籤定位'),
+      ('script', 1, 'A', '導覽腳本', '31 份・文字與標籤定位'),
       ('sitemap', 2, 'A', '網站地圖', '31 頁・BFS 找路'),
       ('layout', 3, 'A', '版面打分', '即時掃描，模型挑一個', 'violet'),
-      ('textonly', 4, 'A', '只給文字說明', '絕不框空白處', 'red'),
+      ('textonly', 4, 'A', '只給文字說明', '不標示任何位置', 'red'),
       ('spot', 2, 'B', '點亮目標', '其他地方變暗・一句話', 'teal', 'double_rect'),
       ('act', 2, 'C', '使用者自己操作', '點、打字、用說的填', 'blue'),
       ('pay', 1, 'C', '付款與送出', '只點亮，本人按', 'orange'),
@@ -88,9 +90,9 @@ spec('03_companion', '陪伴引導：找到該點哪裡，再決定陪多少', '
       ('act', 'right', 'retreat', 'left', 'control', '會了'),
       ('retreat', 'right', 'back', 'left', 'feedback', '卡住')],
      [('control', '主要流程'), ('feedback', '退一步或條件觸發')],
-     '隨時可以按「我自己來」結束；送出被頁面退回時，回頭框出錯的欄位')
+     '')
 
-spec('04_training', '訓練管線：資料怎麼來、模型怎麼進手機', '兩個模型都只學「選一個」；服務改版時重爬、重訓幾分鐘就好',
+spec('04_training', '訓練管線', '兩個模型共用同一批服務訓練句，輸出都是單一選項',
      [('A', '① 訓練資料'), ('B', '② 微調'), ('C', '③ 量化'), ('D', '④ 打包與評測')],
      [('hand', 0, 'A', '手寫核心說法', '每個服務約 30 個', 'blue'),
       ('tmpl', 1, 'A', '模板擴增', '口語・錯字・中英夾雜'),
@@ -117,5 +119,5 @@ spec('04_training', '訓練管線：資料怎麼來、模型怎麼進手機', '�
       ('onnx', 'bottom', 'apk', 'top', 'control', '打包'),
       ('apk', 'right', 'eval', 'left', 'feedback', '手機實測')],
      [('data', '資料'), ('control', '建置'), ('feedback', '評測')],
-     '訓練與推論用同一份 prompt，一字不差；測試句已和訓練句去重')
+     '')
 print('ok')

@@ -44,8 +44,8 @@
     </style>
   </defs>
   <rect data-graph-role="background" width="1400.0" height="940.0" fill="#ffffff"/>
-  <text x="700.0" y="56" text-anchor="middle" class="title">訓練管線：資料怎麼來、模型怎麼進手機</text>
-  <text x="700.0" y="82" text-anchor="middle" class="subtitle">兩個模型都只學「選一個」；服務改版時重爬、重訓幾分鐘就好</text>
+  <text x="700.0" y="56" text-anchor="middle" class="title">訓練管線</text>
+  <text x="700.0" y="82" text-anchor="middle" class="subtitle">兩個模型共用同一批服務訓練句，輸出都是單一選項</text>
   <g id="A" data-graph-role="container" data-container-id="A" data-semantic-role="boundary" data-graph-bounds="40,110,1360,250">
   <rect data-graph-role="container" x="40.0" y="110.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
   <text x="58.0" y="134.0" class="section">① 訓練資料</text>
@@ -196,8 +196,5 @@
     <text data-graph-role="decoration" x="180.0" y="854.0" class="legend">建置</text>
     <line data-graph-role="decoration" x1="232.0" y1="850.0" x2="262.0" y2="850.0" stroke="#ef4444" stroke-width="2.4" marker-end="url(#arrowG)"/>
     <text data-graph-role="decoration" x="272.0" y="854.0" class="legend">評測</text>
-  </g>
-  <g id="footer" data-graph-role="reserved" data-graph-bounds="48,888,272,904">
-  <text x="48.0" y="900.0" class="footnote">訓練與推論用同一份 prompt，一字不差；測試句已和訓練句去重</text>
   </g>
 </svg>

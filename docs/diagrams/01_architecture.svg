@@ -45,16 +45,16 @@
   </defs>
   <rect data-graph-role="background" width="1400.0" height="950.0" fill="#ffffff"/>
   <text x="700.0" y="56" text-anchor="middle" class="title">Polaris 系統架構</text>
-  <text x="700.0" y="82" text-anchor="middle" class="subtitle">語音、翻譯、決策模型與服務網頁全部在手機上執行，飛航模式可用</text>
+  <text x="700.0" y="82" text-anchor="middle" class="subtitle">四層架構，全部在手機上執行</text>
   <g id="band-input" data-graph-role="container" data-container-id="band-input" data-semantic-role="boundary" data-graph-bounds="40,110,1360,250">
   <rect data-graph-role="container" x="40.0" y="110.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="134.0" class="section">① 輸入：TOWNPASS APP（FLUTTER）</text>
-    <rect id="band-input-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="116" width="250.74" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="134.0" class="section">① 輸入：TOWNPASS APP，FLUTTER</text>
+    <rect id="band-input-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="116" width="237.74" height="30" fill="none" stroke="none"/>
   </g>
   <g id="band-decide" data-graph-role="container" data-container-id="band-decide" data-semantic-role="boundary" data-graph-bounds="40,300,1360,440">
   <rect data-graph-role="container" x="40.0" y="300.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="324.0" class="section">② 決策：小幫手（VUE 3，WEBVIEW）</text>
-    <rect id="band-decide-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="249.7" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="324.0" class="section">② 決策：小幫手，VUE 3 於 WEBVIEW</text>
+    <rect id="band-decide-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="246.06" height="30" fill="none" stroke="none"/>
   </g>
   <g id="band-engine" data-graph-role="container" data-container-id="band-engine" data-semantic-role="boundary" data-graph-bounds="40,490,1360,630">
   <rect data-graph-role="container" x="40.0" y="490.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
@@ -63,8 +63,8 @@
   </g>
   <g id="band-act" data-graph-role="container" data-container-id="band-act" data-semantic-role="boundary" data-graph-bounds="40,680,1360,820">
   <rect data-graph-role="container" x="40.0" y="680.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="704.0" class="section">④ 執行與陪伴：疊在原本的服務上</text>
-    <rect id="band-act-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="686" width="224.22" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="704.0" class="section">④ 執行與陪伴：疊加在原服務頁</text>
+    <rect id="band-act-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="686" width="211.22" height="30" fill="none" stroke="none"/>
   </g>
   <path id="speak" data-graph-role="edge" data-edge-id="speak" data-source="user" data-target="stt" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 260,191 L 330,191" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
   <path id="text" data-graph-role="edge" data-edge-id="text" data-source="stt" data-target="pre" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 430,226 L 430,346" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
@@ -85,7 +85,7 @@
   <circle cx="86.0" cy="185.0" r="5" fill="#3b82f6"/>
   <path d="M 76.0 202.0 Q 86.0 193.0 96.0 202.0" fill="none" stroke="#3b82f6" stroke-width="2"/>
   <text data-text-role="title" data-full-text="市民" data-text-max-width="124.0" x="124.0" y="197.0" text-anchor="start" class="node-title" font-size="18">市民</text>
-  <text data-text-role="subtitle" data-full-text="說話・打字・捷徑" data-text-max-width="124.0" x="124.0" y="219.0" text-anchor="start" class="node-sub" font-size="12">說話・打字・捷徑</text>
+  <text data-text-role="subtitle" data-full-text="語音・文字・捷徑" data-text-max-width="124.0" x="124.0" y="219.0" text-anchor="start" class="node-sub" font-size="12">語音・文字・捷徑</text>
   </g>
   <g id="node-stt" data-graph-role="node" data-node-id="stt" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="330,156,530,226">
   <rect x="330.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
@@ -95,7 +95,7 @@
   <g id="node-pre" data-graph-role="node" data-node-id="pre" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="330,346,530,416">
   <rect x="330.0" y="346.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
   <text data-text-role="title" data-full-text="前處理" data-text-max-width="176.0" x="430.0" y="381.0" text-anchor="middle" class="node-title" font-size="18">前處理</text>
-  <text data-text-role="subtitle" data-full-text="外語翻中文・固定指令" data-text-max-width="176.0" x="430.0" y="403.0" text-anchor="middle" class="node-sub" font-size="12">外語翻中文・固定指令</text>
+  <text data-text-role="subtitle" data-full-text="外語翻譯・固定指令" data-text-max-width="176.0" x="430.0" y="403.0" text-anchor="middle" class="node-sub" font-size="12">外語翻譯・固定指令</text>
   </g>
   <g id="node-decider" data-graph-role="node" data-node-id="decider" data-semantic-role="double_rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,346,800,416">
   <rect x="600.0" y="346.0" width="200.0" height="70.0" rx="10.0" fill="#faf5ff" stroke="#8b5cf6" stroke-width="2.0"/>
@@ -111,7 +111,7 @@
   <g id="node-rule" data-graph-role="node" data-node-id="rule" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="1140,346,1340,416">
   <rect x="1140.0" y="346.0" width="200.0" height="70.0" rx="10.0" fill="#fff7ed" stroke="#f97316" stroke-width="1.8"/>
   <text data-text-role="title" data-full-text="決策規則" data-text-max-width="176.0" x="1240.0" y="381.0" text-anchor="middle" class="node-title" font-size="18">決策規則</text>
-  <text data-text-role="subtitle" data-full-text="直接去／追問／找不到" data-text-max-width="176.0" x="1240.0" y="403.0" text-anchor="middle" class="node-sub" font-size="12">直接去／追問／找不到</text>
+  <text data-text-role="subtitle" data-full-text="直接前往・追問・找不到" data-text-max-width="176.0" x="1240.0" y="403.0" text-anchor="middle" class="node-sub" font-size="12">直接前往・追問・找不到</text>
   </g>
   <g id="node-tts" data-graph-role="node" data-node-id="tts" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="60,536,260,606">
   <rect x="60.0" y="536.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
@@ -192,9 +192,9 @@
   <rect x="1086.0" y="350.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
   <text x="1105.0" y="364.0" text-anchor="middle" class="arrow-label">融合</text>
   </g>
-  <g id="go-label" data-graph-role="label" data-owner="go" data-graph-bounds="1139,557,1237,577">
-  <rect x="1139.0" y="557.0" width="98.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
-  <text x="1188.0" y="571.0" text-anchor="middle" class="arrow-label">使用者按「去」</text>
+  <g id="go-label" data-graph-role="label" data-owner="go" data-graph-bounds="1163,557,1237,577">
+  <rect x="1163.0" y="557.0" width="74.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="1200.0" y="571.0" text-anchor="middle" class="arrow-label">使用者確認</text>
   </g>
   <g id="start-label" data-graph-role="label" data-owner="start" data-graph-bounds="1086,730,1124,750">
   <rect x="1086.0" y="730.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
@@ -222,8 +222,5 @@
     <text data-graph-role="decoration" x="332.0" y="864.0" class="legend">服務頁</text>
     <line data-graph-role="decoration" x1="396.0" y1="860.0" x2="426.0" y2="860.0" stroke="#ef4444" stroke-width="2.4" marker-end="url(#arrowG)"/>
     <text data-graph-role="decoration" x="436.0" y="864.0" class="legend">備援</text>
-  </g>
-  <g id="footer" data-graph-role="reserved" data-graph-bounds="48,898,272,914">
-  <text x="48.0" y="910.0" class="footnote">模型只從工具表裡挑選，不產生文字；付款與送出一律由使用者本人按下</text>
   </g>
 </svg>

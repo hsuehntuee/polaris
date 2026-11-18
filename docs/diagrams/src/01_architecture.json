@@ -8,7 +8,7 @@
  "width": 1400,
  "height": 950,
  "title": "Polaris 系統架構",
- "subtitle": "語音、翻譯、決策模型與服務網頁全部在手機上執行，飛航模式可用",
+ "subtitle": "四層架構，全部在手機上執行",
  "containers": [
   {
    "id": "band-input",
@@ -16,7 +16,7 @@
    "y": 110,
    "width": 1320,
    "height": 140,
-   "label": "① 輸入：TownPass App（Flutter）"
+   "label": "① 輸入：TownPass App，Flutter"
   },
   {
    "id": "band-decide",
@@ -24,7 +24,7 @@
    "y": 300,
    "width": 1320,
    "height": 140,
-   "label": "② 決策：小幫手（Vue 3，WebView）"
+   "label": "② 決策：小幫手，Vue 3 於 WebView"
   },
   {
    "id": "band-engine",
@@ -40,7 +40,7 @@
    "y": 680,
    "width": 1320,
    "height": 140,
-   "label": "④ 執行與陪伴：疊在原本的服務上"
+   "label": "④ 執行與陪伴：疊加在原服務頁"
   }
  ],
  "nodes": [
@@ -52,7 +52,7 @@
    "width": 200,
    "height": 70,
    "label": "市民",
-   "sublabel": "說話・打字・捷徑",
+   "sublabel": "語音・文字・捷徑",
    "fill": "#eff6ff",
    "stroke": "#3b82f6",
    "flat": true
@@ -78,7 +78,7 @@
    "width": 200,
    "height": 70,
    "label": "前處理",
-   "sublabel": "外語翻中文・固定指令",
+   "sublabel": "外語翻譯・固定指令",
    "fill": "#ffffff",
    "stroke": "#cbd5e1",
    "flat": true
@@ -117,7 +117,7 @@
    "width": 200,
    "height": 70,
    "label": "決策規則",
-   "sublabel": "直接去／追問／找不到",
+   "sublabel": "直接前往・追問・找不到",
    "fill": "#fff7ed",
    "stroke": "#f97316",
    "flat": true
@@ -320,7 +320,7 @@
    "source_port": "bottom",
    "target_port": "top",
    "flow": "control",
-   "label": "使用者按「去」"
+   "label": "使用者確認"
   },
   {
    "id": "start",
@@ -380,8 +380,5 @@
    "flow": "feedback",
    "label": "備援"
   }
- ],
- "footer": "模型只從工具表裡挑選，不產生文字；付款與送出一律由使用者本人按下",
- "footer_x": 48,
- "footer_y": 910
+ ]
 }

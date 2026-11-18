@@ -1,6 +1,6 @@
 # On-phone numbers (Galaxy S26 Ultra, 2026-11-08)
 
-Same test set as `MATRIX_1K.md` (1,027 utterances after the water-meter service was removed on 2026-11-08), decider served by the llama-server running **inside the TownPass APK** on the Hexagon NPU (`llm-fuse-phone` row), measured over `adb forward` from the laptop (adds ~30 ms per request).
+Same test set as `MATRIX_1K.md` (1,027 utterances), decider served by the llama-server running **inside the TownPass APK** on the Hexagon NPU (`llm-fuse-phone` row), measured over `adb forward` from the laptop (adds ~30 ms per request).
 
 | run | where | first-round | two-round | out-of-scope | p50 | p90 | max |
 |---|---|---|---|---|---|---|---|
@@ -26,5 +26,4 @@ The decider says "out of scope" for some phrasings that a Taipei resident would 
 | CPU, 6 threads (`--device none`) | 318 ms | 11 ms |
 
 - Service-picking prompts share one fixed prefix, so after the first call both paths are a few ms and the latency is dominated by HTTP + WebView. The NPU wins on the prompts that change per page (companion "which button" picks, step-context commands): 3.4x faster and the CPU cores stay free for speech recognition, TTS and the WebView.
-- The earlier "CPU 7.4 s" figure came from the in-app CPU fallback with default threads under load; it is not reproducible with a 6-thread CPU server and is withdrawn.
 - Memory: the Q8 GGUF is 292 MB on disk; the in-app server holds it plus a 2048-token context.

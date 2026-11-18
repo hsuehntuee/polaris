@@ -44,21 +44,21 @@
     </style>
   </defs>
   <rect data-graph-role="background" width="1400.0" height="750.0" fill="#ffffff"/>
-  <text x="700.0" y="56" text-anchor="middle" class="title">陪伴引導：找到該點哪裡，再決定陪多少</text>
-  <text x="700.0" y="82" text-anchor="middle" class="subtitle">引導層疊在原本的服務頁上；服務本身不用改，由使用者自己操作</text>
+  <text x="700.0" y="56" text-anchor="middle" class="title">陪伴引導</text>
+  <text x="700.0" y="82" text-anchor="middle" class="subtitle">引導層疊加在原服務頁上，由使用者自行操作</text>
   <g id="A" data-graph-role="container" data-container-id="A" data-semantic-role="boundary" data-graph-bounds="40,110,1360,250">
   <rect data-graph-role="container" x="40.0" y="110.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="134.0" class="section">① 找該點哪裡（三層，依序嘗試）</text>
-    <rect id="A-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="116" width="224.22" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="134.0" class="section">① 三層定位，依序嘗試</text>
+    <rect id="A-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="116" width="159.22" height="30" fill="none" stroke="none"/>
   </g>
   <g id="B" data-graph-role="container" data-container-id="B" data-semantic-role="boundary" data-graph-bounds="40,300,1360,440">
   <rect data-graph-role="container" x="40.0" y="300.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="324.0" class="section">② 框住真正的欄位</text>
-    <rect id="B-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="133.22" height="30" fill="none" stroke="none"/>
+  <text x="58.0" y="324.0" class="section">② 標示目標欄位</text>
+    <rect id="B-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="120.22" height="30" fill="none" stroke="none"/>
   </g>
   <g id="C" data-graph-role="container" data-container-id="C" data-semantic-role="boundary" data-graph-bounds="40,490,1360,630">
   <rect data-graph-role="container" x="40.0" y="490.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
-  <text x="58.0" y="514.0" class="section">③ 陪伴節奏</text>
+  <text x="58.0" y="514.0" class="section">③ 引導強度</text>
     <rect id="C-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="496" width="94.22" height="30" fill="none" stroke="none"/>
   </g>
   <path id="e0" data-graph-role="edge" data-edge-id="e0" data-source="start" data-target="script" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 260,191 L 330,191" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
@@ -80,7 +80,7 @@
   <g id="node-script" data-graph-role="node" data-node-id="script" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="330,156,530,226">
   <rect x="330.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
   <text data-text-role="title" data-full-text="導覽腳本" data-text-max-width="176.0" x="430.0" y="191.0" text-anchor="middle" class="node-title" font-size="18">導覽腳本</text>
-  <text data-text-role="subtitle" data-full-text="31 份・文字／標籤定位" data-text-max-width="176.0" x="430.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">31 份・文字／標籤定位</text>
+  <text data-text-role="subtitle" data-full-text="31 份・文字與標籤定位" data-text-max-width="176.0" x="430.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">31 份・文字與標籤定位</text>
   </g>
   <g id="node-sitemap" data-graph-role="node" data-node-id="sitemap" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,156,800,226">
   <rect x="600.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
@@ -95,7 +95,7 @@
   <g id="node-textonly" data-graph-role="node" data-node-id="textonly" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="1140,156,1340,226">
   <rect x="1140.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8"/>
   <text data-text-role="title" data-full-text="只給文字說明" data-text-max-width="176.0" x="1240.0" y="191.0" text-anchor="middle" class="node-title" font-size="18">只給文字說明</text>
-  <text data-text-role="subtitle" data-full-text="絕不框空白處" data-text-max-width="176.0" x="1240.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">絕不框空白處</text>
+  <text data-text-role="subtitle" data-full-text="不標示任何位置" data-text-max-width="176.0" x="1240.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">不標示任何位置</text>
   </g>
   <g id="node-spot" data-graph-role="node" data-node-id="spot" data-semantic-role="double_rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,346,800,416">
   <rect x="600.0" y="346.0" width="200.0" height="70.0" rx="10.0" fill="#f0fdfa" stroke="#14b8a6" stroke-width="2.0"/>
@@ -173,8 +173,5 @@
     <text data-graph-role="decoration" x="88.0" y="664.0" class="legend">主要流程</text>
     <line data-graph-role="decoration" x1="164.0" y1="660.0" x2="194.0" y2="660.0" stroke="#ef4444" stroke-width="2.4" marker-end="url(#arrowG)"/>
     <text data-graph-role="decoration" x="204.0" y="664.0" class="legend">退一步或條件觸發</text>
-  </g>
-  <g id="footer" data-graph-role="reserved" data-graph-bounds="48,698,265,714">
-  <text x="48.0" y="710.0" class="footnote">隨時可以按「我自己來」結束；送出被頁面退回時，回頭框出錯的欄位</text>
   </g>
 </svg>

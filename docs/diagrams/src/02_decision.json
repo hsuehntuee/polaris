@@ -7,8 +7,8 @@
  "text_policy": "strict",
  "width": 1400,
  "height": 750,
- "title": "決策流程：從一句話到「要去哪裡」",
- "subtitle": "模型只做選擇題：一次算出每個工具代號的機率，再交給固定的規則決定",
+ "title": "決策流程",
+ "subtitle": "一次推論取得每個工具代號的機率，再依固定規則決定下一步",
  "containers": [
   {
    "id": "A",
@@ -24,7 +24,7 @@
    "y": 300,
    "width": 1320,
    "height": 140,
-   "label": "② 決策規則（門檻 0.75）"
+   "label": "② 決策規則，門檻 0.75"
   },
   {
    "id": "C",
@@ -32,7 +32,7 @@
    "y": 490,
    "width": 1320,
    "height": 140,
-   "label": "③ 三種結果，下一步都由使用者決定"
+   "label": "③ 三種結果，下一步由使用者決定"
   }
  ],
  "nodes": [
@@ -135,7 +135,7 @@
    "width": 200,
    "height": 70,
    "label": "直接去",
-   "sublabel": "確認卡：要去【X】嗎？",
+   "sublabel": "先顯示確認卡",
    "fill": "#f0fdfa",
    "stroke": "#14b8a6",
    "flat": true
@@ -245,8 +245,5 @@
    "flow": "feedback",
    "label": "出口"
   }
- ],
- "footer": "按「不是」只把該選項歸零、重新排序，不必再跑一次模型",
- "footer_x": 48,
- "footer_y": 710
+ ]
 }
