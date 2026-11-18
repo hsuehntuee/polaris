@@ -98,7 +98,8 @@ window.__crawl = {
   },
   next() {
     const seen = new Set(Object.keys(this.pages));
-    for (const p of Object.values(this.pages)) for (const e of p.elements) if (e.leads_to && e.leads_to.startsWith('/') && !seen.has(e.leads_to) && !/\/(form|detail|result|payment|record|history|search-detail|book-detail|notice-detail|ticket-detail|coupon-detail|hotspot|buy-ticket|item-detail|exchange)\/[^/]+/.test(e.leads_to)) return e.leads_to;
+    const detail = (u) => u.includes('?') || /\/(form|detail|result|payment|record|history|search-detail|book-detail|notice-detail|ticket-detail|coupon-detail|hotspot|buy-ticket|item-detail|exchange)\/[^/]+/.test(u) || /\/[A-Za-z]{0,3}-?\d+\/?$/.test(u);
+    for (const p of Object.values(this.pages)) for (const e of p.elements) if (e.leads_to && e.leads_to.startsWith('/') && !seen.has(e.leads_to) && !detail(e.leads_to)) return e.leads_to;
     return null;
   },
   reset() { this.pages = {}; this.save(); },
