@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:town_pass/util/trust.dart';
 
 /// 離線網頁：APK 內建整個微服務網站（assets/web/，由 scripts/bundle-web.mjs 產生）。
 /// WebView 對 http://townpass.local/* 的請求全部在這裡攔下來、從 assets 回檔，
@@ -59,6 +60,8 @@ class OfflineWebService {
   static Future<String?> overrideDir() async {
     if (_overrideChecked) return _overrideDir;
     _overrideChecked = true;
+    // 給市民的 release 版不讀覆蓋資料夾：/sdcard 上的檔案別的程式也能放，網頁只能來自 APK 本身
+    if (!kDevTools) return null;
     try {
       final Directory? ext = await getExternalStorageDirectory();
       if (ext != null) {

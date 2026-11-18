@@ -12,16 +12,37 @@ export interface LogEntry {
 
 const KEY = 'tp_debug_log';
 const MAX = 400;
+/** 記錄只留一天 */
+const TTL_MS = 24 * 60 * 60 * 1000;
 let buf: LogEntry[] | null = null;
+
+function fresh(list: LogEntry[]): LogEntry[] {
+  const cut = Date.now() - TTL_MS;
+  return list.filter((e) => e && e.t >= cut);
+}
 
 function load(): LogEntry[] {
   if (buf) return buf;
   try {
-    buf = JSON.parse(localStorage.getItem(KEY) || '[]');
+    buf = fresh(JSON.parse(localStorage.getItem(KEY) || '[]'));
   } catch {
     buf = [];
   }
   return buf!;
+}
+
+/**
+ * 使用者說的話預設不寫進記錄，只記字數；開發時在 localStorage 設 tp_debug_verbose=1 才記原句。
+ * 記錄存在手機的 WebView 裡、不會傳出去，但市民的原句不該被留著。
+ */
+export function userText(s: string): string {
+  let verbose = false;
+  try {
+    verbose = localStorage.getItem('tp_debug_verbose') === '1';
+  } catch {
+    verbose = false;
+  }
+  return verbose ? s : `〈${[...s].length} 字〉`;
 }
 let flushTimer = 0;
 /** 寫回時跟 localStorage 裡的合併（小幫手頁與服務頁各有自己的記憶體緩衝，不合併會互相蓋掉） */
@@ -37,7 +58,7 @@ function flush() {
       }
       const mine = load();
       const seen = new Set(mine.map((e) => `${e.t}|${e.src}|${e.msg}`));
-      const merged = disk.filter((e) => !seen.has(`${e.t}|${e.src}|${e.msg}`)).concat(mine).sort((a, b) => a.t - b.t).slice(-MAX);
+      const merged = fresh(disk).filter((e) => !seen.has(`${e.t}|${e.src}|${e.msg}`)).concat(mine).sort((a, b) => a.t - b.t).slice(-MAX);
       buf = merged;
       localStorage.setItem(KEY, JSON.stringify(merged));
     } catch {
@@ -61,7 +82,7 @@ export function tplog(src: string, msg: string, data?: unknown, lv: LogEntry['lv
 
 export function readLog(): LogEntry[] {
   try {
-    return JSON.parse(localStorage.getItem(KEY) || '[]');
+    return fresh(JSON.parse(localStorage.getItem(KEY) || '[]'));
   } catch {
     return [];
   }

@@ -9,7 +9,7 @@ import { stt, langId, translate, tts, openExternal, phoneCall, hasBridge, onSttP
 import { createDecider } from '../engines';
 import { loadRegistry, toolByCode, extractParams, invoke, type Registry, type Hit } from '../core/registry';
 import { fuseWithRegistry, rescueCandidates, secondOpinion } from '../core/fuse';
-import { tplog, onTripleTap } from '../core/log';
+import { tplog, onTripleTap, userText } from '../core/log';
 import { callBridge } from '../core/bridge';
 
 const SERVICES_BASE = (import.meta.env.VITE_SERVICES_BASE ?? '').replace(/\/$/, '');
@@ -209,9 +209,23 @@ async function runDecision(text: string) {
     probs.value = await decider.value.score(serviceRequest(catalog.value, text));
   } catch (e) {
     tplog('home', 'score failed: ' + (e as Error).message, undefined, 'error');
-    status.value = t('error_engine') + ' (' + (e as Error).message + ')';
-    phase.value = 'idle';
-    return;
+    // 主引擎（手機上的 llama-server）中途掛掉：改用 WebView 內的分類器重算這一句，之後也用它，不再每次等逾時
+    const fallback = decider.value.name.startsWith('cls') ? null : await secondDecider();
+    if (fallback) {
+      try {
+        probs.value = await fallback.score(serviceRequest(catalog.value, text));
+        tplog('home', `engine ${decider.value.name} failed → switched to ${fallback.name}`, undefined, 'warn');
+        decider.value = fallback;
+        secondCache = null;
+      } catch (e2) {
+        tplog('home', 'fallback score failed: ' + (e2 as Error).message, undefined, 'error');
+      }
+    }
+    if (decider.value !== fallback || !fallback) {
+      status.value = t('error_engine') + ' (' + (e as Error).message + ')';
+      phase.value = 'idle';
+      return;
+    }
   }
   lastMs.value = Math.round(performance.now() - t0);
   lastText.value = text;
@@ -226,16 +240,17 @@ async function runDecision(text: string) {
     const second = await secondDecider();
     if (second) {
       try {
-        const sp = fuseWithRegistry(registry.value, text, await second.score(serviceRequest(catalog.value, text))).probs;
+        // 門檻比的是分類器自己的機率；查表加權過的機率會把候選灌高，0.8 形同 0.2～0.3
+        const sp = await second.score(serviceRequest(catalog.value, text));
         const d1 = secondOpinion(d0, cands, sp);
-        if (d1 !== d0) tplog('home', `second opinion (${second.name}) rescued "${text}" → ${d1.kind === 'GO' ? d1.code : d1.kind}`, { cands, top: Object.entries(sp).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c, p]) => `${c}:${p.toFixed(2)}`).join(' ') });
+        if (d1 !== d0) tplog('home', `second opinion (${second.name}) rescued "${userText(text)}" → ${d1.kind === 'GO' ? d1.code : d1.kind}`, { cands, top: Object.entries(sp).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([c, p]) => `${c}:${p.toFixed(2)}`).join(' ') });
         d0 = d1;
       } catch (e) {
         tplog('home', 'second opinion failed', String(e), 'warn');
       }
     }
   }
-  tplog('home', `decide "${text}" → ${d0.kind}${d0.kind === 'GO' ? ' ' + d0.code : d0.kind === 'ASK' ? ' ' + d0.codes.join('/') : ''}`, {
+  tplog('home', `decide "${userText(text)}" → ${d0.kind}${d0.kind === 'GO' ? ' ' + d0.code : d0.kind === 'ASK' ? ' ' + d0.codes.join('/') : ''}`, {
     engine: decider.value.name, ms: lastMs.value, info: decider.value.info(),
     top: Object.entries(probs.value).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([c, p]) => `${c}:${p.toFixed(2)}`).join(' '),
     hits: fused.hits.map((h) => h.term)

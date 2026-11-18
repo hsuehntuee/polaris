@@ -79,6 +79,9 @@ const server = http.createServer((req, res) => {
   const p = decodeURIComponent(u.pathname);
   // 開發用：瀏覽器把爬到的 sitemap 存回 assistant/public/data 與 dist/data（POST /__save?name=sitemap.json）
   if (p === '/__save' && req.method === 'POST') {
+    // 只接受本機（這台電腦上的瀏覽器）：伺服器綁 0.0.0.0 給手機看網頁，但區網其他裝置不能改檔案
+    const ra = String(req.socket.remoteAddress || '');
+    if (!/^(127\.|::1$|::ffff:127\.)/.test(ra)) return send(res, 403, 'save is only allowed from this computer');
     const name = String(u.searchParams.get('name') || '').replace(/[^\w.-]/g, '');
     if (!name.endsWith('.json')) return send(res, 400, 'name must be *.json');
     let body = '';

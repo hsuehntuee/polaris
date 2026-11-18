@@ -61,7 +61,7 @@
 
 系統分四層，全部在手機上執行：
 
-1. **輸入**：TownPass App 以 Flutter 處理語音辨識，網頁只接收文字。
+1. **輸入**：TownPass App 以 Flutter 呼叫 Android 的 Google 語音服務做語音辨識，網頁只接收文字。離線時使用手機上下載好的離線語言包；有網路時由 Google 語音服務處理，可能經過雲端。
 2. **決策**：小幫手是在 WebView 中執行的 Vue 3 網頁。它把句子交給決策器，取得每個工具代號的機率，再依工具表與固定規則決定下一步。
 3. **本地模型與原生引擎**：llama-server 在 App 程序內執行 Gemma 決策器，優先使用 Hexagon NPU。ML Kit 負責語言判斷與翻譯，flutter_tts 負責朗讀。
 4. **執行與陪伴**：工具表定義每個工具要開啟的頁面與參數。引導層由 App 注入到每個服務頁，服務程式不需修改。
@@ -98,7 +98,7 @@
 ![訓練管線](docs/diagrams/04_training.png)
 
 - **訓練資料**：約 6,300 句服務語句，來源有兩種：手寫核心說法經模板擴增口語、語音辨識錯字、中英夾雜與外語變化，以及從服務頁 mock 資料與頁面文字自動擷取的句子。另有 965 題按鈕選擇題，由網站地圖產生，每題的選項順序都打亂，讓模型依標籤內容判斷而非記憶位置。
-- **Gemma 3 270M**：凍結底座，只訓練 LoRA，rank 16，套用於 attention 與 MLP 的全部投影層。loss 只計算答案字母所在的最後一個位置。訓練與推論使用同一份 prompt，程式會核對兩者完全一致。合併後量化為 GGUF Q8_0，大小 292 MB。
+- **Gemma 3 270M**：凍結底座，只訓練 LoRA，rank 16，套用於 attention 與 MLP 的全部投影層。loss 只計算答案字母所在的最後一個位置。訓練與推論使用同一份 prompt，程式會核對兩者完全一致；已移除的服務仍保留在 prompt 中，模型選到時一律視為找不到。合併後量化為 GGUF Q8_0，大小 292 MB。
 - **e5-small 分類器**：以同一批句子微調分類頭，詞表從約 25 萬裁到約 1.3 萬，量化為 ONNX int8，大小 27.5 MB，在 WebView 中以 Transformers.js 執行。
 - **微調的效果**：零樣本的 Gemma 270M 與 1B 在早期 107 句測試集上第一輪命中僅 0% 到 6%，零樣本 e5 在 1,027 句測試集上約 50%；微調後兩者第一輪皆超過 93%。
 
@@ -109,10 +109,10 @@
 | 前端框架 | Vue 3.4、Vite 5、TypeScript 5.4；服務頁另用 Tailwind CSS 3.4、Pinia、Leaflet 1.9 | `assistant/` 為小幫手與引導層，`TownPass-Services/` 為服務頁 |
 | App | Flutter 3.47.6、flutter_inappwebview 6.1 | 以 TownPass 開源 App 為基礎，WebView 載入 APK 內建網頁 |
 | 後端框架 | 無傳統後端；手機上的 llama.cpp b12180 `llama-server`，Snapdragon Hexagon NPU 版 | 在 App 程序內以 JNI 啟動，只提供本機推論 |
-| 資料庫 | 無；設定存於 WebView 的 localStorage 與 sessionStorage，服務資料為 JSON | 使用者資料不離開手機 |
+| 資料庫 | 無；設定存於 WebView 的 localStorage 與 sessionStorage，服務資料為 JSON | 小幫手的句子與決策不離開手機；有網路時的例外見「外部 API」 |
 | AI 模型 | Gemma 3 270M 以 LoRA 微調後轉 GGUF Q8_0；multilingual-e5-small 微調後轉 ONNX int8 | 訓練使用 PyTorch、Transformers、PEFT |
-| 裝置端能力 | speech_to_text 7.5、Google ML Kit Language ID 與 Translation、flutter_tts | 語音、翻譯、朗讀皆使用手機本身的引擎 |
-| 外部 API | 執行時不呼叫任何 API；地圖底圖使用 OpenStreetMap 圖磚，需要網路 | 公廁與停車場為政府開放資料，見功能說明 |
+| 裝置端能力 | speech_to_text 7.5、Google ML Kit Language ID 與 Translation、flutter_tts | 翻譯與朗讀使用手機本身的引擎；語音辨識使用 Android 的 Google 語音服務，離線時用手機上的語言包 |
+| 外部 API | 小幫手本身不呼叫外部 API。有網路時：地圖底圖從 OpenStreetMap 下載圖磚；服務頁的「標注地點」會把地圖中心座標或輸入的地址送到 OpenStreetMap Nominatim 查地址（市府服務頁原有功能）；語音辨識由 Google 語音服務處理 | 公廁與停車場為政府開放資料，見功能說明 |
 
 ---
 
@@ -242,10 +242,10 @@ nginx 容器提供服務頁與小幫手，並將 `/llm/` 轉發到 llama.cpp 容
 
 ### 1. 使用到的 AI 模型
 
-- **Claude**：Claude Code，模型為 Claude Opus 5.5，作為主要開發助理；Claude Sonnet 子代理用於產生測試語句〔請確認：開發期間用到的其他 Claude 版本〕
-- **ChatGPT**：〔請填寫：未使用／使用版本〕
-- **Gemini**：〔請填寫：未使用／使用版本〕
-- **影像生成**：〔請填寫：未使用／使用工具〕
+- **Claude**：Claude Code，模型為 Claude Opus 5.5與 Claude Fable 5.1，作為主要開發助理；Claude Sonnet 子代理用於產生測試語句。
+- **ChatGPT**：未使用
+- **Gemini**：未使用
+- **影像生成**：未使用人工智慧於本服務中進行影像生成
 - **自行架設 / 本地模型，產品本身使用**：
   - Google Gemma 3 270M，`google/gemma-3-270m-it`，本團隊以 LoRA 微調為服務決策器，格式 GGUF Q8_0
   - Microsoft multilingual-e5-small，`intfloat/multilingual-e5-small`，本團隊微調為服務分類器，格式 ONNX int8
@@ -260,11 +260,11 @@ nginx 容器提供服務頁與小幫手，並將 `/llm/` 轉發到 llama.cpp 容
 
 ### 3. AI 產生內容如何被驗證或修改
 
-- **實機驗證**：每一輪修改都在 Galaxy S26 Ultra 上實測；15 條服務流程由自動操作腳本在實機上逐步執行並截圖。
+- **實機驗證**：每一輪修改都在 Galaxy S26 Ultra 上實測；15 條服務流程由自動操作腳本在實機上逐步執行並截圖驗證。
 - **量化評測**：決策器以 1,027 句測試集評估第一輪命中、兩輪內命中、範圍外辨識與延遲，並交叉比對手機與電腦的結果。
 - **網站稽核**：遞迴走訪 174 個服務頁，0 缺檔、0 例外，結果見 [eval/AUDIT.md](eval/AUDIT.md)。
 - **結構性防護**：模型只能從服務清單選出一個代號，不產生文字；參數只從原句抽取並由使用者確認；付款與送出一律由使用者本人按下。
-- **人工 Code Review**：〔請填寫：審查方式與人數〕
+- **人工 Code Review**： 由最高技術負責人員進行核心程式碼審查，隱私隔離、資料抓取與本地 AI inference的部分。
 
 ### 4. 與 AI 相關的限制或風險
 
@@ -272,7 +272,7 @@ nginx 容器提供服務頁與小幫手，並將 `/llm/` 轉發到 llama.cpp 容
 - **測試集來源**：測試集由 AI 產生，並非真實市民語料，實際表現需以真實場域收集的語句再驗證。
 - **自由格式參數**：車牌、身分證、案件編號、地址等欄位的抽取規則尚不完整，由使用者自行輸入。
 - **示範資料**：除公廁與停車場外，服務資料為示範用途，並非真實市政資料。
-- **敏感資料**：開發過程中〔請確認〕未曾輸入任何專案機密、使用者個人資料或未公開的 API 金鑰；產品本身不需要任何金鑰，執行時不將使用者資料傳出手機。
+- **敏感資料**：開發過程中未曾輸入任何專案機密，或任何未接露的內容、使用者個人資料或未公開的 API 金鑰；產品本身不需要任何金鑰；小幫手執行時不會把使用者的句子傳出手機。有網路時，語音辨識由 Google 語音服務處理，服務頁標注地點會把座標或地址送到 OpenStreetMap，詳見技術架構的「外部 API」。
 
 ---
 

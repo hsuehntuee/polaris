@@ -3,12 +3,14 @@
 #
 #   .\scripts\build-release.ps1                 # 產出到 release\
 #   .\scripts\build-release.ps1 -SkipWeb        # 網頁已經 build 過，只重包 APK
+#   .\scripts\build-release.ps1 -DevTools       # 自己實機測試用：開 WebView 遠端除錯與 /sdcard 覆蓋資料夾（phone-probe、phone-push-web 需要）；不要拿去發布
 #
 # 前置：Node 20 + pnpm、Flutter 3.47.6（fvm）、JDK 17、Android SDK；
 #       tools\llama-android\snapdragon\llama-b12180\（llama.cpp 官方 Snapdragon release，解壓即可）；
 #       tools\llm\out\gemma-3-270m-decider-Q8_0.gguf（Release 附件或 tools\llm\finetune_gemma.py 產生）。
 param(
   [switch]$SkipWeb,
+  [switch]$DevTools,
   [string]$OutDir = ''
 )
 $ErrorActionPreference = 'Stop'
@@ -47,7 +49,9 @@ try {
   Step 'copy llama-server (Snapdragon build) + model into the APK'
   Run 'node' @('scripts/prepare-llama-jni.mjs') $root
   Step 'flutter build apk --release'
-  Run $FlutterBat @('build', 'apk', '--release', '--dart-define=LLM_URL=http://localhost:8080', '--dart-define=OFFLINE_WEB=true') (Join-Path $root 'TownPass')
+  $defines = @('--dart-define=LLM_URL=http://localhost:8080', '--dart-define=OFFLINE_WEB=true')
+  if ($DevTools) { $defines += '--dart-define=DEV_TOOLS=true'; Write-Host '  DEV_TOOLS=true：這是測試版，不要上傳到 Release' -ForegroundColor Yellow }
+  Run $FlutterBat (@('build', 'apk', '--release') + $defines) (Join-Path $root 'TownPass')
 }
 finally {
   [System.IO.File]::WriteAllText($pubspec, $pubspecBackup, (New-Object System.Text.UTF8Encoding($false)))

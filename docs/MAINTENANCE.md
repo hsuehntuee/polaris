@@ -379,7 +379,7 @@ sh scripts/phone-push-web.sh            # 推到手機的覆蓋資料夾，App �
 sh scripts/phone-push-web.sh --clear    # 正式展示前一定要清掉，回到 APK 內建版本
 ```
 
-手機除錯工具：`sh scripts/phone-probe.sh` 顯示陪伴面板與標示框的狀態；`node --experimental-websocket scripts/phone-autowalk.mjs` 自動走完一條導覽並逐步截圖，用法寫在檔案開頭。這些工具需要開啟 WebView 除錯的 debug 版 APK。
+手機除錯工具：`sh scripts/phone-probe.sh` 顯示陪伴面板與標示框的狀態；`node --experimental-websocket scripts/phone-autowalk.mjs` 自動走完一條導覽並逐步截圖，用法寫在檔案開頭。覆蓋資料夾、WebView 遠端除錯與這些工具只在 debug 版，或用 `.\scripts\build-release.ps1 -DevTools`（`--dart-define=DEV_TOOLS=true`）編的測試版才會開；要發布的 APK 一律不加，三者都關閉。
 
 ### 6.3 把模型推到手機的外部資料夾
 

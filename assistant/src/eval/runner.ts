@@ -28,6 +28,8 @@ export interface ItemResult {
   asks: number;
   ms: number;
   top3: Array<[Code, number]>;
+  /** 引擎出錯（逾時、連不上）：算答錯 */
+  error?: boolean;
 }
 
 export interface EvalSummary {
@@ -40,6 +42,8 @@ export interface EvalSummary {
   avg_asks: number;
   p50_ms: number;
   p95_ms: number;
+  /** 引擎出錯的句數（已算成答錯） */
+  errors: number;
   by_tag: Record<string, { n: number; first_hit: number; two_round_hit: number }>;
   thresholds: Thresholds;
   items: ItemResult[];
@@ -68,10 +72,13 @@ export async function runEval(
     const ok = new Set([it.expect, ...(it.alt ?? [])]);
     const t0 = now();
     let probs: Probs;
+    let engineError = false;
     try {
       probs = await decider.score(serviceRequest(catalog, it.text));
     } catch (e) {
+      // 引擎出錯：這一句記成錯誤（不能當成「正確的找不到」灌高範圍外的分數）
       probs = { [none]: 1 };
+      engineError = true;
     }
     let hits: Hit[] = [];
     if (opts.registry) {
@@ -85,8 +92,8 @@ export async function runEval(
     if (opts.second) {
       const cands = rescueCandidates(first, opts.registry ?? null, hits);
       if (cands.length) {
-        let sp = await opts.second.score(serviceRequest(catalog, it.text));
-        if (opts.registry) sp = fuseWithRegistry(opts.registry, it.text, sp, opts.alpha).probs;
+        // 跟 App 一樣：門檻比的是第二個模型自己的機率（不先融查表）
+        const sp = await opts.second.score(serviceRequest(catalog, it.text));
         first = secondOpinion(first, cands, sp);
       }
     }
@@ -111,11 +118,16 @@ export async function runEval(
       twoRoundHit = first.codes.some((c) => ok.has(c));
     }
 
+    if (engineError) {
+      firstHit = false;
+      twoRoundHit = false;
+    }
+
     const top3 = Object.entries(probs)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
       .map(([c, p]) => [c, Math.round(p * 1000) / 1000] as [Code, number]);
-    const r: ItemResult = { text: it.text, expect: it.expect, tag, first, firstHit, twoRoundHit, asks, ms, top3 };
+    const r: ItemResult = { text: it.text, expect: it.expect, tag, first, firstHit, twoRoundHit, asks, ms, top3, ...(engineError ? { error: true } : {}) };
     results.push(r);
     opts.onProgress?.(i, r);
     if (opts.delayMs) await new Promise((res) => setTimeout(res, opts.delayMs));
@@ -144,6 +156,7 @@ export function summarize(decider: Decider, results: ItemResult[], th: Threshold
     avg_asks: n ? results.reduce((s, r) => s + r.asks, 0) / n : 0,
     p50_ms: lat[Math.floor(lat.length * 0.5)] ?? 0,
     p95_ms: lat[Math.min(lat.length - 1, Math.floor(lat.length * 0.95))] ?? 0,
+    errors: results.filter((r) => r.error).length,
     by_tag,
     thresholds: th,
     items: results,

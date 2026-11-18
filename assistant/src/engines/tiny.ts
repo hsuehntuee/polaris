@@ -1,5 +1,5 @@
 import type { Code, Decider, Probs, ScoreRequest } from '../core/types';
-import { softmax } from '../core/decide';
+import { softmax, foldInactive } from '../core/decide';
 
 /**
  * tiny 引擎：fastText 式的字元 n-gram 分類器，自己實作、兩邊 hash 一致。
@@ -72,8 +72,7 @@ export class TinyDecider implements Decider {
     const out: Record<Code, number> = {};
     m.labels.forEach((l, i) => (out[l] = logits[i]));
     const probs = softmax(out, T);
-    for (const o of req.options) if (!(o.code in probs)) probs[o.code] = 0;
-    return probs;
+    return foldInactive(probs, req); // 模型認得但清單已拔掉的類別 → 併入「找不到」
   }
 
   info() {

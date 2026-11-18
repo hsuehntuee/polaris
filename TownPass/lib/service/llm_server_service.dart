@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:town_pass/util/trust.dart';
 
 /// App 自己啟動、看管手機本地的 llama-server（Snapdragon NPU）。
 ///
@@ -60,7 +61,8 @@ class LlmServerService extends GetxService {
   Future<void> _ensureModel() async {
     final Directory? ext = await getExternalStorageDirectory();
     final List<String> candidates = <String>[
-      if (ext != null) '${ext.path}/gguf/$modelName',
+      // 外部檔案夾的模型只在開發版讀（/sdcard 上的檔案可以被換掉）；release 版只用 APK 複製到私有目錄的那一份
+      if (kDevTools && ext != null) '${ext.path}/gguf/$modelName',
       '${(await getApplicationSupportDirectory()).path}/gguf/$modelName',
     ];
     // 私有目錄已經有一份：確認跟 APK 裡的是同一份（換了新權重要重新複製）
@@ -156,7 +158,9 @@ class LlmServerService extends GetxService {
   bool _inProcTried = false;
 
   Future<bool> _startInProcess() async {
-    final List<String> args = <String>['-m', _modelPath!, '-ngl', '99', '--host', '127.0.0.1', '--port', '$port', '-c', '2048', '-np', '2', '--cache-reuse', '256', '-t', '6'];
+    final List<String> args = <String>['-m', _modelPath!, '-ngl', '99', '--host', '127.0.0.1', '--port', '$port', '-c', '2048', '-np', '2', '--cache-reuse', '256', '-t', '6',
+      // 只給本 App 用：關掉網頁介面與 /slots（slots 會露出上一句的 prompt）
+      '--no-webui', '--no-slots'];
     _set('starting-inproc', args.join(' '));
     try {
       final int? rc = await _ch.invokeMethod<int>('startServerInProcess', <String, dynamic>{'args': args});

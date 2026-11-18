@@ -83,7 +83,7 @@
         "zh": "確認沒問題就按「送出」"
       },
       "done_when": "click",
-      "confirm": false,
+      "confirm": true,
       "final": true
     }
   ],

@@ -1,5 +1,6 @@
 import type { Code, Decider, Option, Probs, ScoreRequest } from '../core/types';
-import { softmax } from '../core/decide';
+import { softmax, foldInactive } from '../core/decide';
+import { useLocalOrt } from './cls';
 
 export interface EmbedOptions {
   modelId?: string;
@@ -54,6 +55,7 @@ export class EmbedDecider implements Decider {
     if (!this.extractor) {
       const t0 = Date.now();
       const tf: any = await import('@huggingface/transformers');
+      await useLocalOrt(tf);
       if (this.localModelPath) {
         tf.env.allowLocalModels = true;
         tf.env.localModelPath = this.localModelPath;
@@ -99,7 +101,7 @@ export class EmbedDecider implements Decider {
       if (o.code === req.noneCode) best = Math.max(best, this.zSim);
       logits[o.code] = best / this.temperature;
     }
-    return softmax(logits);
+    return foldInactive(softmax(logits), req);
   }
 
   info() {

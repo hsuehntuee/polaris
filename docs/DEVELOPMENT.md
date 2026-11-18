@@ -49,7 +49,7 @@ cd TownPass; .\.fvm\flutter_sdk\bin\flutter.bat build apk --release --dart-defin
 adb install -r TownPass\build\app\outputs\flutter-apk\app-release.apk
 ```
 
-Iterating on the web apps without rebuilding the APK (the app prefers an override folder on the phone; clear it before a real demo):
+Iterating on the web apps without rebuilding the APK (the app prefers an override folder on the phone; clear it before a real demo). The override folder, WebView remote debugging and the probe/walk tools work only in a debug build or a release built with `.\scripts\build-release.ps1 -DevTools` (`--dart-define=DEV_TOOLS=true`); the published APK has all three turned off:
 
 ```powershell
 node scripts/bundle-web.mjs; sh scripts/phone-push-web.sh        # push web + overlay, restart app

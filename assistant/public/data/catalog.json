@@ -1244,5 +1244,12 @@
       }
     ]
   },
-  "note": "A～Y 服務、a～e App 層工具（字放大、一般模式、念出來、掃描帳單、看全部服務）、Z 都不是。route.type: internal | external | phone | unavailable | ui(mode:elder|mode:normal|tts)"
+  "note": "A～Y 服務、a～e App 層工具（字放大、一般模式、念出來、掃描帳單、看全部服務）、Z 都不是。route.type: internal | external | phone | unavailable | ui(mode:elder|mode:normal|tts)",
+  "retired": [
+    {
+      "code": "B",
+      "label": "報水表度數",
+      "desc": "自己抄水表、回報用水度數，或查詢用水度數"
+    }
+  ]
 }

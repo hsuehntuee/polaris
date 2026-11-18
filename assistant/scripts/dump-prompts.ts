@@ -18,7 +18,7 @@ const out = {
   services: {
     prefix: buildPrefix(serviceOptions(catalog), catalog.instruction, catalog.none_code),
     none: catalog.none_code,
-    labels: [...catalog.services.map((s) => s.code), catalog.none_code],
+    labels: serviceOptions(catalog).map((o) => o.code), // 含已拔掉的代號（模型訓練時的類別）
     query_example: buildQuery({ text: '我要繳水費', options: [], instruction: '', noneCode: 'Z' })
   },
   commands: {

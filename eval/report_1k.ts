@@ -33,8 +33,9 @@ const counts = (k: (i: any) => string) => {
 };
 md += `Composition: tag ${counts((i) => i.tag)}; lang ${counts((i) => i.lang ?? 'zh')}; style ${counts((i) => i.style)}\n\n`;
 md += `In-scope hit rates are over non-NONE items (including foreign); "oos" is the NONE detection rate. \`fuse\` = registry lookup fusion.\n\n`;
+md += `Rows marked "(n=1052)" were run before 報水表度數 (B) was removed, on the earlier 1,052-item version of this set; compare them only with each other. Unmarked rows are on the current ${ts.length} items. \`-review\` rows: after the code review (prompt identical to training again, B folded into NONE, second opinion compared on the classifier's own probability).\n\n`;
 md += `## Main table\n\n${MARKDOWN_HEADER}\n`;
-for (const { s } of runs) md += markdownRow(s.name, s.where, s) + '\n';
+for (const { s } of runs) md += markdownRow(s.name, s.n !== ts.length ? `${s.where} (n=${s.n})` : s.where, s) + '\n';
 
 md += `\n## Before / after retraining\n\n| engine | first-round | two-round | NONE detection | avg asks |\n|---|---|---|---|---|\n`;
 const byName = new Map(runs.map((r) => [r.s.name as string, r.s]));

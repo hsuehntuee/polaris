@@ -1,41 +1,45 @@
 # MATRIX_1K: testset_1k.json (1027 items)
 
-Generated 2026-11-07T21:25:16.765Z
+Generated 2026-11-18T18:28:07.068Z
 
 Composition: tag ambiguous=8, foreign=111, normal=780, oos=128; lang en=153, id=42, th=42, vi=42, zh=663, zh-en=85; style ambiguous=8, asr=155, colloquial=196, english=153, foreign=126, keyword=60, long=119, mixed=85, nearmiss=90, param=35
 
 In-scope hit rates are over non-NONE items (including foreign); "oos" is the NONE detection rate. `fuse` = registry lookup fusion.
 
+Rows marked "(n=1052)" were run before 報水表度數 (B) was removed, on the earlier 1,052-item version of this set; compare them only with each other. Unmarked rows are on the current 1027 items. `-review` rows: after the code review (prompt identical to training again, B folded into NONE, second opinion compared on the classifier's own probability).
+
 ## Main table
 
 | 模型 / 引擎 | 跑在哪裡 | 首輪命中率 | 2 輪內命中率 | 不在範圍內的辨識率 | 平均追問次數 | 延遲 p50 | 記憶體 |
 |---|---|---|---|---|---|---|---|
-| cls-fuse-before | laptop | 77.4% | 89.3% | 64.1% | 0.18 | 6 ms |  |
-| cls-fuse-r1 | laptop | 91.6% | 95.9% | 60.9% | 0.08 | 38 ms |  |
-| cls-fuse-r2 | laptop | 91.1% | 95.2% | 91.4% | 0.07 | 6 ms |  |
+| cls-fuse-before | laptop (n=1052) | 77.4% | 89.3% | 64.1% | 0.18 | 6 ms |  |
+| cls-fuse-r1 | laptop (n=1052) | 91.6% | 95.9% | 60.9% | 0.08 | 38 ms |  |
+| cls-fuse-r2 | laptop (n=1052) | 91.1% | 95.2% | 91.4% | 0.07 | 6 ms |  |
 | cls-fuse-r3 | laptop | 94.9% | 96.8% | 90.6% | 0.04 | 6 ms |  |
-| cls-nofuse-before | laptop | 74.5% | 87.3% | 64.8% | 0.20 | 6 ms |  |
-| cls-nofuse-r1 | laptop | 90.9% | 95.2% | 61.7% | 0.09 | 45 ms |  |
-| cls-nofuse-r2 | laptop | 90.6% | 94.3% | 92.2% | 0.08 | 6 ms |  |
+| cls-nofuse-before | laptop (n=1052) | 74.5% | 87.3% | 64.8% | 0.20 | 6 ms |  |
+| cls-nofuse-r1 | laptop (n=1052) | 90.9% | 95.2% | 61.7% | 0.09 | 45 ms |  |
+| cls-nofuse-r2 | laptop (n=1052) | 90.6% | 94.3% | 92.2% | 0.08 | 6 ms |  |
 | cls-nofuse-r3 | laptop | 94.7% | 96.2% | 90.6% | 0.04 | 6 ms |  |
-| embed-fuse-before | laptop | 50.4% | 63.7% | 49.2% | 0.37 | 6 ms |  |
-| embed-nofuse-before | laptop | 46.4% | 61.7% | 49.2% | 0.39 | 5 ms |  |
-| llm-fuse-after | laptop-gpu | 93.6% | 97.6% | 99.2% | 0.04 | 40 ms |  |
-| llm-fuse-before | laptop-gpu | 52.9% | 61.7% | 82.0% | 0.36 | 39 ms |  |
+| embed-fuse-before | laptop (n=1052) | 50.4% | 63.7% | 49.2% | 0.37 | 6 ms |  |
+| embed-nofuse-before | laptop (n=1052) | 46.4% | 61.7% | 49.2% | 0.39 | 5 ms |  |
+| llm-fuse-2nd-review | laptop | 93.4% | 97.4% | 99.2% | 0.04 | 45 ms |  |
+| llm-fuse-after | laptop-gpu (n=1052) | 93.6% | 97.6% | 99.2% | 0.04 | 40 ms |  |
+| llm-fuse-before | laptop-gpu (n=1052) | 52.9% | 61.7% | 82.0% | 0.36 | 39 ms |  |
 | llm-fuse-phone-2nd | S26-NPU-inapp | 93.2% | 97.4% | 99.2% | 0.04 | 64 ms |  |
 | llm-fuse-phone | S26-NPU-inapp | 93.2% | 97.3% | 99.2% | 0.04 | 63 ms |  |
-| llm-nofuse-after | laptop-gpu | 93.1% | 97.2% | 99.2% | 0.04 | 41 ms |  |
-| llm-nofuse-before | laptop-gpu | 51.4% | 60.9% | 82.0% | 0.38 | 39 ms |  |
-| llmcs-fuse-before | laptop-gpu | 72.3% | 87.2% | 80.5% | 0.21 | 40 ms |  |
-| llmcs-nofuse-before | laptop-gpu | 68.6% | 86.0% | 80.5% | 0.25 | 38 ms |  |
-| tiny-fuse-before | laptop | 60.7% | 73.2% | 71.1% | 0.23 | 0 ms |  |
-| tiny-fuse-r1 | laptop | 60.7% | 73.2% | 71.1% | 0.23 | 0 ms |  |
-| tiny-fuse-r2 | laptop | 70.6% | 85.5% | 95.3% | 0.15 | 1 ms |  |
-| tiny-fuse-r3 | laptop | 72.7% | 85.4% | 95.3% | 0.12 | 1 ms |  |
-| tiny-nofuse-before | laptop | 57.7% | 71.3% | 71.1% | 0.25 | 0 ms |  |
-| tiny-nofuse-r1 | laptop | 57.7% | 71.3% | 71.1% | 0.25 | 0 ms |  |
-| tiny-nofuse-r2 | laptop | 65.2% | 81.4% | 95.3% | 0.16 | 0 ms |  |
-| tiny-nofuse-r3 | laptop | 66.2% | 81.7% | 95.3% | 0.15 | 0 ms |  |
+| llm-fuse-review | laptop | 93.4% | 97.4% | 99.2% | 0.04 | 42 ms |  |
+| llm-nofuse-after | laptop-gpu (n=1052) | 93.1% | 97.2% | 99.2% | 0.04 | 41 ms |  |
+| llm-nofuse-before | laptop-gpu (n=1052) | 51.4% | 60.9% | 82.0% | 0.38 | 39 ms |  |
+| llmcs-fuse-before | laptop-gpu (n=1052) | 72.3% | 87.2% | 80.5% | 0.21 | 40 ms |  |
+| llmcs-nofuse-before | laptop-gpu (n=1052) | 68.6% | 86.0% | 80.5% | 0.25 | 38 ms |  |
+| tiny-fuse-before | laptop (n=1052) | 60.7% | 73.2% | 71.1% | 0.23 | 0 ms |  |
+| tiny-fuse-r1 | laptop (n=1052) | 60.7% | 73.2% | 71.1% | 0.23 | 0 ms |  |
+| tiny-fuse-r2 | laptop (n=1052) | 70.6% | 85.5% | 95.3% | 0.15 | 1 ms |  |
+| tiny-fuse-r3 | laptop (n=1052) | 72.7% | 85.4% | 95.3% | 0.12 | 1 ms |  |
+| tiny-nofuse-before | laptop (n=1052) | 57.7% | 71.3% | 71.1% | 0.25 | 0 ms |  |
+| tiny-nofuse-r1 | laptop (n=1052) | 57.7% | 71.3% | 71.1% | 0.25 | 0 ms |  |
+| tiny-nofuse-r2 | laptop (n=1052) | 65.2% | 81.4% | 95.3% | 0.16 | 0 ms |  |
+| tiny-nofuse-r3 | laptop (n=1052) | 66.2% | 81.7% | 95.3% | 0.15 | 0 ms |  |
 
 ## Before / after retraining
 
@@ -66,10 +70,12 @@ In-scope hit rates are over non-NONE items (including foreign); "oos" is the NON
 | cls-nofuse-r3 | 93.5% | 98.2% | 87.4% | 93.0% | 100.0% | 96.3% | 98.6% | 100.0% | 94.6% | 87.5% | 90.6% |
 | embed-fuse-before | 50.3% | 63.6% | 47.7% | 54.2% | 56.0% | 46.7% | 37.8% | 74.3% | 40.5% | 25.0% | 49.2% |
 | embed-nofuse-before | 44.4% | 58.2% | 37.8% | 51.4% | 50.7% | 48.9% | 35.1% | 54.3% | 40.5% | 25.0% | 49.2% |
+| llm-fuse-2nd-review | 93.5% | 98.2% | 90.1% | 88.0% | 96.0% | 95.6% | 97.3% | 97.1% | 93.7% | 87.5% | 99.2% |
 | llm-fuse-after | 93.5% | 98.2% | 90.1% | 88.0% | 96.0% | 95.6% | 97.3% | 97.1% | 93.7% | 87.5% | 99.2% |
 | llm-fuse-before | 52.9% | 63.6% | 47.7% | 51.4% | 60.0% | 54.1% | 45.9% | 85.7% | 36.0% | 75.0% | 82.0% |
 | llm-fuse-phone-2nd | 92.2% | 98.2% | 89.2% | 88.7% | 96.0% | 95.6% | 98.6% | 97.1% | 92.8% | 87.5% | 99.2% |
 | llm-fuse-phone | 91.5% | 98.2% | 90.1% | 88.7% | 96.0% | 95.6% | 98.6% | 97.1% | 92.8% | 87.5% | 99.2% |
+| llm-fuse-review | 93.5% | 98.2% | 90.1% | 88.0% | 96.0% | 95.6% | 97.3% | 97.1% | 93.7% | 87.5% | 99.2% |
 | llm-nofuse-after | 90.8% | 100.0% | 88.3% | 88.0% | 96.0% | 95.6% | 98.6% | 94.3% | 93.7% | 87.5% | 99.2% |
 | llm-nofuse-before | 52.9% | 63.6% | 44.1% | 50.0% | 60.0% | 53.3% | 40.5% | 80.0% | 36.0% | 75.0% | 82.0% |
 | llmcs-fuse-before | 77.8% | 87.3% | 71.2% | 75.4% | 82.7% | 71.9% | 70.3% | 85.7% | 44.1% | 75.0% | 80.5% |
@@ -133,6 +139,12 @@ Worst 10 tools: H fee_history 78.3% (18/23); b ui_normal 79.2% (19/24); j green_
 
 Most common confusions: b -> a x3; Z -> i x3; A -> D x2; C -> I x2; H -> D x2; M -> NONE x2; j -> O x2; Z -> b x2; C -> G x1; E -> G x1; H -> C x1; H -> ASK(HG) x1
 
+### llm-fuse-2nd-review
+
+Worst 10 tools: H fee_history 78.3% (18/23); a ui_elder 78.3% (18/23); Q coupon 83.3% (20/24); K citizen_report_search 84.0% (21/25); j green_map 85.7% (18/21); J citizen_report 86.7% (26/30); b ui_normal 87.5% (21/24); G fee_pay_other 88.9% (24/27); c read_aloud 91.3% (21/23); k pet_map 91.7% (22/24)
+
+Most common confusions: G -> NONE x3; J -> NONE x2; K -> J x2; Q -> ASK(RQ) x2; a -> ASK(ab) x2; a -> b x2; j -> O x2; k -> ASK(kj) x2; A -> NONE x1; A -> ASK(AG) x1; C -> ASK(CD) x1; D -> ASK(RD) x1
+
 ### llm-fuse-after
 
 Worst 10 tools: H fee_history 78.3% (18/23); a ui_elder 78.3% (18/23); Q coupon 83.3% (20/24); K citizen_report_search 84.0% (21/25); j green_map 85.7% (18/21); J citizen_report 86.7% (26/30); b ui_normal 87.5% (21/24); G fee_pay_other 88.9% (24/27); c read_aloud 91.3% (21/23); k pet_map 91.7% (22/24)
@@ -156,6 +168,12 @@ Most common confusions: G -> NONE x3; K -> J x2; Q -> ASK(RQ) x2; a -> ASK(ab) x
 Worst 10 tools: H fee_history 78.3% (18/23); a ui_elder 78.3% (18/23); Q coupon 83.3% (20/24); b ui_normal 83.3% (20/24); G fee_pay_other 85.2% (23/27); j green_map 85.7% (18/21); J citizen_report 86.7% (26/30); K citizen_report_search 88.0% (22/25); T call_1999 90.5% (19/21); c read_aloud 91.3% (21/23)
 
 Most common confusions: G -> NONE x3; a -> ASK(ab) x3; H -> NONE x2; K -> J x2; Q -> ASK(RQ) x2; j -> O x2; k -> ASK(kj) x2; A -> NONE x1; A -> ASK(AG) x1; C -> ASK(DC) x1; D -> ASK(RD) x1; D -> NONE x1
+
+### llm-fuse-review
+
+Worst 10 tools: H fee_history 78.3% (18/23); a ui_elder 78.3% (18/23); Q coupon 83.3% (20/24); K citizen_report_search 84.0% (21/25); j green_map 85.7% (18/21); J citizen_report 86.7% (26/30); b ui_normal 87.5% (21/24); G fee_pay_other 88.9% (24/27); c read_aloud 91.3% (21/23); k pet_map 91.7% (22/24)
+
+Most common confusions: G -> NONE x3; H -> NONE x2; J -> NONE x2; K -> J x2; Q -> ASK(RQ) x2; a -> ASK(ab) x2; a -> b x2; j -> O x2; k -> ASK(kj) x2; A -> NONE x1; A -> ASK(AG) x1; C -> ASK(CD) x1
 
 ### llm-nofuse-after
 

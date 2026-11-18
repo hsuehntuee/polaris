@@ -22,6 +22,8 @@ export interface Option {
   desc: string;
   examples?: string[];
   keywords?: string[];
+  /** 已拔掉的服務：模型訓練時的清單有它，推論時照樣放進 prompt（訓練與推論一字不差），選到它就算「找不到」 */
+  retired?: boolean;
 }
 
 export interface CommandOption extends Option {
@@ -29,6 +31,8 @@ export interface CommandOption extends Option {
 }
 
 export interface Catalog {
+  /** 已拔掉的服務（見 Option.retired） */
+  retired?: Array<{ code: Code; label: string; desc: string }>;
   version: string;
   none_code: Code;
   instruction: string;

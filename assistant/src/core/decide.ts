@@ -65,3 +65,22 @@ export function softmax(logits: Record<Code, number>, temperature = 1): Probs {
   keys.forEach((k, i) => (out[k] = exps[i] / sum));
   return out;
 }
+
+/**
+ * 引擎輸出的最後一步：已拔掉的服務（Option.retired）和模型認得但清單沒有的類別，機率一律併入「找不到」，
+ * 不重新分給其他服務（不然「報水表度數」這類句子會被推到不相干的服務）。
+ */
+export function foldInactive(probs: Record<string, number>, req: { options: Array<{ code: string; retired?: boolean }>; noneCode: string }): Record<string, number> {
+  const active = new Set(req.options.filter((o) => !o.retired).map((o) => o.code));
+  active.add(req.noneCode);
+  let moved = 0;
+  for (const c of Object.keys(probs)) {
+    if (!active.has(c)) {
+      moved += probs[c] || 0;
+      delete probs[c];
+    }
+  }
+  probs[req.noneCode] = (probs[req.noneCode] || 0) + moved;
+  for (const c of active) if (!(c in probs)) probs[c] = 0;
+  return probs;
+}

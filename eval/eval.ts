@@ -68,6 +68,7 @@ fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, JSON.stringify({ name, where, ...summary }, null, 2));
 console.log(MARKDOWN_HEADER);
 console.log(markdownRow(name, where, summary));
+if (summary.errors) console.error(`engine errors: ${summary.errors} (counted as misses)`);
 console.error('wrote', outFile);
 
 async function makeDecider(kind: string): Promise<Decider> {

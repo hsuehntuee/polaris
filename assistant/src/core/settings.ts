@@ -50,15 +50,36 @@ export const settings = {
   },
   /** LLM 網址：?llm=... > localStorage > VITE_LLM_URL > /llm */
   get llmUrl(): string {
+    // 網址參數 / 存著的值只接受本機、區網或同源路徑：不讓一條連結把之後的查詢導到外部伺服器
     const q = new URLSearchParams(location.search).get('llm');
-    if (q) set(K.llmUrl, q);
-    return q || get(K.llmUrl) || (window as any).__TP_LLM_URL__ || (import.meta as any).env?.VITE_LLM_URL || '/llm';
+    const okQ = q && isLocalLlmUrl(q) ? q : '';
+    if (okQ) set(K.llmUrl, okQ);
+    const stored = get(K.llmUrl);
+    return okQ || (stored && isLocalLlmUrl(stored) ? stored : '') || (window as any).__TP_LLM_URL__ || (import.meta as any).env?.VITE_LLM_URL || '/llm';
   },
   set llmUrl(v: string) {
-    set(K.llmUrl, v);
+    if (isLocalLlmUrl(v)) set(K.llmUrl, v);
   }
 };
 
 export function applyMode(mode: Mode) {
   document.documentElement.dataset.mode = mode;
+}
+
+/** 本機（localhost / 127.x / ::1）、區網私有位址（10.x、172.16–31.x、192.168.x、*.local）或同源路徑（/llm） */
+export function isLocalLlmUrl(u: string): boolean {
+  if (/^\/(?!\/)/.test(u)) return true;
+  let h = '';
+  try {
+    const url = new URL(u);
+    if (!/^https?:$/.test(url.protocol)) return false;
+    h = url.hostname.replace(/^\[|\]$/g, '');
+  } catch {
+    return false;
+  }
+  if (h === 'localhost' || h === '::1' || /\.local$/.test(h)) return true;
+  const m = h.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+  if (!m) return false;
+  const [a, b] = [Number(m[1]), Number(m[2])];
+  return a === 127 || a === 10 || (a === 192 && b === 168) || (a === 172 && b >= 16 && b <= 31);
 }

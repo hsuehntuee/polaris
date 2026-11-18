@@ -1,6 +1,6 @@
 import type { Code, Decider, Probs, ScoreRequest } from '../core/types';
 import { buildPrefix, buildPrompt } from '../core/prompt';
-import { softmax } from '../core/decide';
+import { softmax, foldInactive } from '../core/decide';
 
 export interface LlmOptions {
   /** 'native' 用 llama-server 的 /completion；'openai' 用 /v1/completions */
@@ -73,7 +73,7 @@ export class LlmDecider implements Decider {
     const probs = softmax(logits);
     // 沒出現在 top-N 的代號機率視為 0
     for (const c of codes) if (!(c in probs)) probs[c] = 0;
-    return probs;
+    return foldInactive(probs, req);
   }
 
   info() {

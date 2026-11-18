@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:town_pass/util/web_message_handler/tp_assistant_message_handler.dart';
 import 'package:town_pass/util/web_message_handler/tp_web_message_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:town_pass/util/trust.dart';
 
 abstract class TPWebMessageListener {
   // 將訊息處理器列表快取起來，避免每次訪問時都重複建立新的實例。
@@ -33,6 +34,10 @@ abstract class TPWebMessageListener {
       jsObjectName: 'flutterObject',
       onPostMessage: (webMessage, sourceOrigin, isMainFrame, replyProxy) async {
         if (webMessage == null) {
+          return;
+        }
+        // 只有自己的網頁（主框架）可以叫原生功能：外部網站或 iframe 不能拿語音、定位、使用者資料
+        if (!isMainFrame || !isTrustedOrigin(sourceOrigin?.toString())) {
           return;
         }
 

@@ -1,5 +1,5 @@
 import type { Code, Decider, Probs, ScoreRequest } from '../core/types';
-import { softmax } from '../core/decide';
+import { softmax, foldInactive } from '../core/decide';
 
 export interface ClsOptions {
   /** 模型目錄的根（瀏覽器：/assistant/models/；Node：檔案路徑）。模型在 `cls-<setId>/` */
@@ -54,6 +54,7 @@ export class ClsDecider implements Decider {
     if (!cfg || cfg.model_type === undefined) throw new Error('cls_model_missing:' + setId);
     const t0 = Date.now();
     const tf: any = await import('@huggingface/transformers');
+    await useLocalOrt(tf);
     tf.env.allowLocalModels = true;
     tf.env.localModelPath = this.modelBase;
     tf.env.allowRemoteModels = this.allowRemote;
@@ -74,16 +75,8 @@ export class ClsDecider implements Decider {
     const logits: Record<Code, number> = {};
     for (const r of res) logits[r.label] = Math.log(Math.max(r.score, 1e-12));
     const probs = softmax(logits, this.temperature);
-    for (const o of req.options) if (!(o.code in probs)) probs[o.code] = 0;
-    // 模型訓練時有、目錄已經拔掉的類別：丟掉並重新正規化（不然會選到不存在的服務）
-    const keep = new Set([...req.options.map((o) => o.code), req.noneCode]);
-    let sum = 0;
-    for (const c of Object.keys(probs)) {
-      if (!keep.has(c)) delete probs[c];
-      else sum += probs[c];
-    }
-    if (sum > 0) for (const c of Object.keys(probs)) probs[c] /= sum;
-    return probs;
+    // 模型訓練時有、目錄已經拔掉的類別（報水表度數）：機率併入「找不到」，不分給其他服務
+    return foldInactive(probs, req);
   }
 
   info() {
@@ -102,4 +95,14 @@ async function fetchConfig(url: string): Promise<any> {
   const text = await res.text();
   if (text.trim().startsWith('<')) throw new Error('missing ' + url);
   return JSON.parse(text);
+}
+
+/** 瀏覽器裡：ONNX runtime 從小幫手自己的檔案載入，不從 CDN（見 ort-paths.ts） */
+export async function useLocalOrt(tf: any): Promise<void> {
+  if (typeof window === 'undefined') return;
+  const wasmEnv = tf?.env?.backends?.onnx?.wasm;
+  if (!wasmEnv) return;
+  // transformers.js 在 import 的當下就把 wasmPaths 設成 jsdelivr，所以這裡一律覆蓋
+  const { ORT_PATHS } = await import('./ort-paths');
+  wasmEnv.wasmPaths = ORT_PATHS;
 }

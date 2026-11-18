@@ -12,6 +12,7 @@ import 'package:town_pass/service/offline_web_service.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/web_message_handler/tp_web_message_listener.dart';
+import 'package:town_pass/util/trust.dart';
 
 class WebViewArgument {
   final String? url;
@@ -49,10 +50,10 @@ class TPWebView extends StatelessWidget {
 
   final RxBool canGoBack = RxBool(false);
 
-  // 開 WebView 遠端除錯（chrome://inspect 可看 console / DOM）；開發用
+  // 開 WebView 遠端除錯（chrome://inspect 可看 console / DOM）：只有開發版（kDevTools）才開
   static bool _dbg = false;
   void _enableDebug() {
-    if (_dbg || !Platform.isAndroid) return;
+    if (_dbg || !kDevTools || !Platform.isAndroid) return;
     _dbg = true;
     InAppWebViewController.setWebContentsDebuggingEnabled(true);
   }
@@ -124,8 +125,9 @@ class TPWebView extends StatelessWidget {
           };
         },
         onGeolocationPermissionsShowPrompt: (controller, origin) async {
-          // should be deal individually (ask for user agreement)
-          return GeolocationPermissionShowPromptResponse(origin: origin, allow: true, retain: true);
+          // 定位只給自己的網頁（townpass.local／開發機）；外部網站不自動給
+          final bool ok = isTrustedOrigin(origin);
+          return GeolocationPermissionShowPromptResponse(origin: origin, allow: ok, retain: ok);
         },
         onCloseWindow: (_) => Get.back(),
         onConsoleMessage: (_, msg) {

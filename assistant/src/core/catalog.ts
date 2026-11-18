@@ -27,6 +27,13 @@ export function serviceOptions(c: Catalog): Option[] {
     examples: s.examples,
     keywords: s.keywords
   }));
+  // 已拔掉的服務放回原本的位置（代號順序 A–Y、a–y），prompt 才跟訓練時一字不差；機率由各引擎併入「找不到」
+  const ORDER = 'ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy';
+  for (const r of c.retired ?? []) {
+    if (opts.some((o) => o.code === r.code)) continue;
+    const at = opts.findIndex((o) => ORDER.indexOf(o.code) > ORDER.indexOf(r.code));
+    opts.splice(at < 0 ? opts.length : at, 0, { code: r.code, label: r.label, desc: r.desc, retired: true });
+  }
   opts.push({ code: c.none_code, id: 'none', label: '都不是', desc: '以上都不是，或是跟市政服務無關', examples: ['今天天氣真好', '你是誰', '唱首歌給我聽', 'hello'] });
   return opts;
 }

@@ -130,5 +130,6 @@
   "guide_form_upload": "Add a photo? Skip if not",
   "guide_form_pick_one": "Pick one: {text}",
   "guide_form_pick": "Tap {text} and pick",
-  "guide_form_missing": "Something is missing, fill this first"
+  "guide_form_missing": "Something is missing, fill this first",
+  "guide_popup_decide": "A window needs your decision. Read it, then choose yourself"
 }

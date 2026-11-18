@@ -109,5 +109,6 @@
   "guide_form_upload": "Thêm ảnh? Không thì bỏ qua",
   "guide_form_pick_one": "Chọn một: {text}",
   "guide_form_pick": "Bấm {text} và chọn",
-  "guide_form_missing": "Còn thiếu, điền mục này trước"
+  "guide_form_missing": "Còn thiếu, điền mục này trước",
+  "guide_popup_decide": "Có một cửa sổ cần bạn quyết định. Đọc kỹ rồi tự chọn"
 }

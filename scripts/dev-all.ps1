@@ -1,4 +1,4 @@
-# 一鍵啟動筆電端：建置服務頁與小幫手 → 啟動 llama-server（選配）→ 啟動單一 port 伺服器。
+﻿# 一鍵啟動筆電端：建置服務頁與小幫手 → 啟動 llama-server（選配）→ 啟動單一 port 伺服器。
 #   .\scripts\dev-all.ps1                       # 預設 port 5180，模型 tools/llm/out/gemma-3-270m-decider-Q8_0.gguf（有才啟動）
 #   .\scripts\dev-all.ps1 -Port 5180 -Model tools/models/xxx.gguf
 #   .\scripts\dev-all.ps1 -SkipBuild            # 已經 build 過

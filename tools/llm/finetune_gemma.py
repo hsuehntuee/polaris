@@ -118,6 +118,12 @@ def main():
     catalog = json.load(open(os.path.join(PUB, 'data', 'catalog.json'), encoding='utf-8'))
     # 核對：Python 版 buildPrefix 必須和前端一字不差
     svc_opts = [{'code': s_['code'], 'label': s_['title']['zh'], 'desc': s_['desc'], 'examples': s_['examples']} for s_ in catalog['services']]
+    # 已拔掉的服務（catalog.retired）放回原本的位置：跟前端 serviceOptions 一樣，prompt 才一字不差
+    order = 'ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy'
+    for r in catalog.get('retired', []):
+        if any(o['code'] == r['code'] for o in svc_opts): continue
+        at = next((i for i, o in enumerate(svc_opts) if order.index(o['code']) > order.index(r['code'])), len(svc_opts))
+        svc_opts.insert(at, {'code': r['code'], 'label': r['label'], 'desc': r['desc'], 'examples': []})
     svc_opts.append({'code': catalog['none_code'], 'label': '都不是', 'desc': '以上都不是，或是跟市政服務無關', 'examples': ['今天天氣真好', '你是誰', '唱首歌給我聽', 'hello']})
     assert build_prefix(svc_opts, catalog['instruction'], catalog['none_code']) == prompts['services']['prefix'], 'build_prefix 和 prompts.json 不一致，先跑 pnpm -s tsx scripts/dump-prompts.ts 並檢查 prompt.ts'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
