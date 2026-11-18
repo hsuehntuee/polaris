@@ -86,7 +86,7 @@ export async function runEval(
       probs = f.probs;
       hits = f.hits;
     }
-    const ms = now() - t0;
+    let ms = now() - t0;
     let first = decide(probs, none, th);
     // 第二意見（跟 App 同一條規則）：主模型說 NONE + 查表有候選 → 另一個模型同意才救
     if (opts.second) {
@@ -95,6 +95,7 @@ export async function runEval(
         // 跟 App 一樣：門檻比的是第二個模型自己的機率（不先融查表）
         const sp = await opts.second.score(serviceRequest(catalog, it.text));
         first = secondOpinion(first, cands, sp);
+        ms = now() - t0; // 第二意見的時間也算進這一句的延遲（App 裡使用者也要等它）
       }
     }
     let firstHit = false;

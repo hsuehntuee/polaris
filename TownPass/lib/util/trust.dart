@@ -12,6 +12,13 @@ bool isTrustedOrigin(String? origin) {
   final Uri? u = Uri.tryParse(origin);
   if (u == null || u.host.isEmpty) return false;
   if (u.scheme == 'http' && u.host == 'townpass.local') return true;
-  final Uri? dev = Uri.tryParse(kDevServiceUrl);
-  return dev != null && dev.host.isNotEmpty && u.scheme == dev.scheme && u.host == dev.host && u.port == dev.port;
+  bool same(String base) {
+    final Uri? b = Uri.tryParse(base);
+    return b != null && b.host.isNotEmpty && u.scheme == b.scheme && u.host == b.host && u.port == b.port;
+  }
+  // 開發時：服務頁那台（DEV_SERVICE_URL），以及另外指定的小幫手那台（ASSISTANT_URL）
+  return same(kDevServiceUrl) || (kAssistantUrlOverride.isNotEmpty && same(kAssistantUrlOverride));
 }
+
+/// 跟 AssistantService 的 kAssistantUrl 同一個編譯參數（這裡另外讀，避免互相 import）
+const String kAssistantUrlOverride = String.fromEnvironment('ASSISTANT_URL', defaultValue: '');

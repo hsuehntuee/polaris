@@ -85,7 +85,14 @@ def main():
             print(f'+ {ep}', file=sys.stderr)
     catalog = json.load(open(os.path.join(PUB, 'data', 'catalog.json'), encoding='utf-8'))
     if args.set == 'services':
-        labels = [s['code'] for s in catalog['services']] + [catalog['none_code']]
+        labels = [s['code'] for s in catalog['services']]
+        # 已拔掉的服務（catalog.retired）照代號順序放回去：類別順序跟出貨的模型一樣，訓練句也不會被丟掉
+        order = 'ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy'
+        for r in catalog.get('retired', []):
+            if r['code'] in labels: continue
+            at = next((i for i, c in enumerate(labels) if order.index(c) > order.index(r['code'])), len(labels))
+            labels.insert(at, r['code'])
+        labels.append(catalog['none_code'])
         # 目錄裡的 examples / keywords / title 也放進訓練
         for s in catalog['services']:
             for ex in [s['title']['zh']] + s['examples'] + s['keywords']:

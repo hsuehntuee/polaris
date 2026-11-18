@@ -6,7 +6,7 @@
  */
 import { LlmDecider, parseNative, parseOpenAI } from '../assistant/src/engines/llm';
 import { buildPrompt } from '../assistant/src/core/prompt';
-import { softmax } from '../assistant/src/core/decide';
+import { softmax, foldInactive } from '../assistant/src/core/decide';
 import type { Probs, ScoreRequest } from '../assistant/src/core/types';
 
 export class LlmDeciderCS extends LlmDecider {
@@ -31,6 +31,6 @@ export class LlmDeciderCS extends LlmDecider {
     if (!Object.keys(logits).length) return { [req.noneCode]: 1 };
     const probs = softmax(logits);
     for (const c of codes) if (!(c in probs)) probs[c] = 0;
-    return probs;
+    return foldInactive(probs, req); // 跟 LlmDecider 一樣：已拔掉的服務併入「找不到」
   }
 }

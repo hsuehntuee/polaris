@@ -235,6 +235,7 @@ class Runner {
       vv.addEventListener('resize', onVv);
       vv.addEventListener('scroll', onVv);
       this.cleanupAll.push(() => {
+        window.removeEventListener('resize', onVv);
         vv.removeEventListener('resize', onVv);
         vv.removeEventListener('scroll', onVv);
       });
@@ -415,8 +416,7 @@ class Runner {
       // 後備的目標詞：這一步的定位器真的用到 {{entity}} 才拿實體當目標（「點地圖上的標記」不能因為下拉選單裡有「公廁」就挑到下拉選單）
       const usesEntity = step.find.some((l) => /\{\{entity\}\}/.test((l.text || '') + (l.label || '') + (l.option || '') + (l.within || '')));
       const goal = (usesEntity ? this.state.params?.entity : '') || this.tpl(step.find[0]?.text || step.find[0]?.label || step.find[0]?.option || '') || say.replace(/[「」]/g, '');
-      const sensitive = !!step.confirm || CONFIRM_TEXT.test(say + ' ' + step.find.map((f) => this.tpl(f.text || f.label || '')).join(' '));
-      const best = sensitive ? null : await this.autoPick(goal, step);
+      const best = this.isSensitive(step) ? null : await this.autoPick(goal, step);
       if (tok !== this.stepToken || this.dead) return;
       if (best && best.ambiguous && best.ambiguous.length > 1) return this.askWhich(step, best.ambiguous, say);
       if (best) {
@@ -732,13 +732,16 @@ class Runner {
     // LLM（筆電 / 4090 的大模型才有用；手機上的 270M 只會挑服務，所以信心不夠就不採用）
     try {
       if (!this.catalog) this.catalog = await fetchJson<Catalog>(`${BASE}data/catalog.json`);
-      const llm = new LlmDecider(LLM_URL);
-      await llm.ready();
+      const llm = await uiLlm();
+      if (!llm) throw new Error('llm_down');
       const codes = 'ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy';
       const top = allowed.slice(0, codes.length); // 只給模型看允許的元素（登出、刪除、外部連結已經濾掉）
       const options = top.map((c, i) => ({ code: codes[i], label: c.label, desc: c.kind }));
       options.push({ code: 'Z', label: '都不是', desc: '沒有適合的' });
-      const probs = await llm.score({ text: `目標：${g}。這一步：${this.tx(step.say)}`, options, instruction: '你是畫面導覽員。下面是畫面上可以點的東西，選出為了達成目標應該點的那一個，只輸出一個字母。', noneCode: 'Z', setId: 'ui_' + location.pathname });
+      const probs = await llm.score({ text: `目標：${g}。這一步：${this.tx(step.say)}`, options, instruction: '你是畫面導覽員。下面是畫面上可以點的東西，選出為了達成目標應該點的那一個，只輸出一個字母。', noneCode: 'Z', setId: 'ui_' + location.pathname }).catch((e) => {
+        pageLlm = null; // 中途失效：這一頁之後不再用 LLM
+        throw e;
+      });
       const d = decide(probs, 'Z', { go: 0.6, ask2: 2, ask3: 2 });
       if (d.kind === 'GO') {
         const i = codes.indexOf(d.code);
@@ -772,8 +775,15 @@ class Runner {
       .map((st) => ({ ...st, optional: false }));
   }
 
+  /** 付款、送出、確認類步驟：腳本標了 confirm，或說明／定位器裡有付款、送出等字 */
+  isSensitive(step: Step): boolean {
+    return !!step.confirm || CONFIRM_TEXT.test(this.tx(step.say) + ' ' + step.find.map((f) => this.tpl(f.text || f.label || '')).join(' '));
+  }
+
   /** 這一步是不是已經做完了（狀態感知） */
   isStepDone(step: Step): boolean {
+    // 語音預填、等使用者按「對」的時候，欄位雖然有值但還沒確認：一律不算完成（重新定位時也不能跳過這一步）
+    if (this.confirming) return false;
     if (step.url && !new RegExp(step.url).test(location.pathname)) return false;
     if (step.skip_if_visible && this.fillLocators(step.skip_if_visible).some((l) => evidenceVisible(l))) return true;
     if (step.done_when === 'change') {
@@ -883,8 +893,9 @@ class Runner {
         return; // 返回／關閉／刪除這類不代按，請使用者自己來
       }
       if (!confirmed && (step.confirm || needsConfirm(el))) {
+        const tok = this.stepToken;
         const ok = await this.ui.ask(this.t('guide_confirm_q', { text: this.tpl(step.find[0]?.text || '') }), this.t('guide_confirm_yes'), this.t('guide_confirm_no'));
-        if (!ok) return;
+        if (!ok || tok !== this.stepToken || this.dead) return;
       }
       el.click();
       const token = this.stepToken;
@@ -908,11 +919,13 @@ class Runner {
       case 'click': {
         const token = this.stepToken;
         const group = this.targets.length > 1 ? this.targets : [el];
+        const strict = this.isSensitive(step); // 付款、送出：點旁邊的暗色背景絕不能算按了「是」
         const near = (g: HTMLElement, ev: Event) => {
+          if (strict) return false;
           const me = ev as MouseEvent;
           if (typeof me.clientX !== 'number' || (me.clientX === 0 && me.clientY === 0)) return false;
           const r = g.getBoundingClientRect();
-          const pad = 10; // 亮框比目標大一圈：點在亮框邊上落到父層也算
+          const pad = 6; // 跟亮框外擴的範圍一樣：點在看得到的亮框邊上、落到父層也算
           return me.clientX >= r.left - pad && me.clientX <= r.right + pad && me.clientY >= r.top - pad && me.clientY <= r.bottom + pad;
         };
         const h = (ev: Event) => {
@@ -1079,7 +1092,8 @@ class Runner {
       this.run();
       return;
     }
-    if (this.step && this.step.done_when !== 'manual' && this.isStepDone(this.step)) return void this.advanceBy('self');
+    // 預填等使用者按「對」的時候，欄位已經有值，但還不算填完
+    if (!this.confirming && this.step && this.step.done_when !== 'manual' && this.isStepDone(this.step)) return void this.advanceBy('self');
     this.ui.place(this.target);
   }
 
@@ -1197,6 +1211,7 @@ class Runner {
     const off = onSttPartial((t) => this.ui.live('「' + t + '」'));
     const r = await stt(this.copy.stt_lang || 'zh-TW').catch(() => ({ text: '' }));
     off();
+    if (this.dead || this.step !== step) return; // 聽的時候導覽結束或換了步驟：結果不用了（不要復活已結束的導覽）
     this.ui.live('');
     this.ui.setListening(false);
     if (r.text) this.ui.flash(this.t('guide_heard') + r.text);
@@ -1206,7 +1221,8 @@ class Runner {
   }
 
   async handleUtterance(text: string) {
-    const step = this.step!;
+    if (this.dead || !this.step) return;
+    const step = this.step;
     tplog('overlay', 'utterance: ' + userText(text), { step: step.id });
     // 1. 規則
     let cmd: CommandId | null = matchCommandRule(text);
@@ -1244,7 +1260,9 @@ class Runner {
       case 'OTHER': {
         // 太短的話不當作要換服務（常是語音沒聽清楚）
         if (text.length < 4) return this.ui.flash(this.t('guide_unknown'));
+        const tok = this.stepToken;
         const ok = await this.ui.ask(this.t('guide_other_q') + `「${text}」`, this.t('guide_confirm_yes'), this.t('guide_confirm_no'));
+        if (tok !== this.stepToken || this.dead) return;
         if (ok) {
           clearState();
           location.href = `${BASE}?q=${encodeURIComponent(text)}&lang=${this.state.lang}`;
@@ -1275,7 +1293,14 @@ class Runner {
       }
       if (!this.decider) this.decider = await pickDecider(commandOptions(this.catalog), this.catalog);
       const req = commandRequest(this.catalog, text, this.tx(step.say));
-      const probs = await this.decider.score(req);
+      const probs = await this.decider.score(req).catch((e) => {
+        // LLM 中途失效：換成手機上的小分類器，下一句不再等逾時
+        if (this.decider?.name === 'llm') {
+          pageLlm = null;
+          this.decider = null;
+        }
+        throw e;
+      });
       const idOf = (code: string) => this.catalog!.commands.options.find((o) => o.code === code)?.id as CommandId | undefined;
       const d = decide(probs, this.catalog.commands.none_code, { go: 0.6, ask2: 0.6, ask3: 0.6 });
       if (d.kind === 'GO') return idOf(d.code) ?? null;
@@ -1296,10 +1321,16 @@ class Runner {
     const el = this.target as HTMLInputElement | null;
     if (!el) return;
     this.confirming = true;
+    const tok = this.stepToken;
     setNativeValue(el, value);
     this.ui.setInputValue(value);
     const ok = await this.ui.ask(this.t('guide_fill_confirm', { value }), this.t('guide_fill_yes'), this.t('guide_fill_no'));
     this.confirming = false;
+    if (tok !== this.stepToken || this.dead) {
+      // 問句被收掉（換了步驟、導覽結束）：使用者沒有確認過的值不留在頁面上
+      if (!ok && document.contains(el) && el.value === value) setNativeValue(el, '');
+      return;
+    }
     if (ok) {
       if (this.step?.done_when === 'input') this.advance();
       else this.renderPanel(this.tx(this.step?.say), this.tx(this.step?.more));
@@ -1315,7 +1346,9 @@ class Runner {
     this.stuckTimer = window.setTimeout(async () => {
       if (!this.step) return;
       if (this.collapsed) return this.expand(); // 躲著但使用者卡住了 → 出來
+      const tok = this.stepToken;
       const ok = await this.ui.ask(this.t('guide_stuck'), this.t('guide_help'), '1999');
+      if (tok !== this.stepToken || this.dead) return; // 問句被收掉（換了步驟）：不是使用者的回答，絕不撥號
       if (ok) this.help();
       else phoneCall('1999');
     }, STUCK_MS);
@@ -1427,6 +1460,7 @@ class Runner {
   }
 
   finish() {
+    if (this.dead) return; // 已經離開或完成過
     this.dead = true;
     this.clearStep();
     for (const c of this.cleanupAll.splice(0)) c();
@@ -1456,13 +1490,29 @@ class Runner {
   }
 }
 
+/** 這一頁的 LLM：undefined = 還沒試過，null = 連不上或中途失效（之後不再試） */
+let pageLlm: LlmDecider | null | undefined;
+async function uiLlm(): Promise<LlmDecider | null> {
+  if (pageLlm !== undefined) return pageLlm;
+  const llm = new LlmDecider(LLM_URL, { timeoutMs: 8000 });
+  try {
+    await llm.ready();
+    pageLlm = llm;
+  } catch {
+    pageLlm = null;
+  }
+  return pageLlm;
+}
+
 async function pickDecider(options: Option[], catalog: Catalog): Promise<Decider> {
   const sets = [{ options, instruction: catalog.commands.instruction, noneCode: catalog.commands.none_code, setId: 'commands' }];
-  const llm = new LlmDecider(LLM_URL);
+  const llm = pageLlm === null ? null : new LlmDecider(LLM_URL, { timeoutMs: 8000 });
   try {
+    if (!llm) throw new Error('llm_down');
     await llm.ready({ sets });
     return llm;
   } catch {
+    pageLlm = null;
     const tiny = new TinyDecider({ modelBase: `${BASE}models/` });
     await tiny.ready({ sets });
     return tiny;
@@ -1958,7 +2008,13 @@ class Ui {
     this.more.classList.add('on');
   }
 
+  /** 等待中的問句（收掉或被新問句取代時回答「否」） */
+  private pendingAsk: ((v: boolean) => void) | null = null;
+
   cancelAsk() {
+    const pending = this.pendingAsk;
+    this.pendingAsk = null;
+    pending?.(false);
     if (!this.askEl.classList.contains('on')) return;
     this.askEl.classList.remove('on');
     this.askEl.innerHTML = '';
@@ -1967,7 +2023,12 @@ class Ui {
 
   /** 在面板裡問一個是/否的問題 */
   ask(q: string, yes: string, no: string): Promise<boolean> {
+    // 前一個問句還沒回答就被取代：當作「否」
+    const prev = this.pendingAsk;
+    this.pendingAsk = null;
+    prev?.(false);
     return new Promise((resolve) => {
+      this.pendingAsk = resolve;
       this.askEl.innerHTML = '';
       const p = document.createElement('div');
       p.textContent = q;
@@ -1982,6 +2043,8 @@ class Ui {
         if (secondary) b.className = 'secondary';
         b.addEventListener('click', (ev) => {
           ev.stopPropagation();
+          if (this.pendingAsk !== resolve) return; // 已經被收掉或取代
+          this.pendingAsk = null;
           this.askEl.classList.remove('on');
           this.syncPadding();
           resolve(v);

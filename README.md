@@ -59,7 +59,7 @@
 
 ![系統架構圖](docs/diagrams/01_architecture.png)
 
-系統分四層，全部在手機上執行：
+系統分四層，都在手機上執行；有網路時的語音辨識與地圖例外，見下方第 1 層與技術架構的「外部 API」：
 
 1. **輸入**：TownPass App 以 Flutter 呼叫 Android 的 Google 語音服務做語音辨識，網頁只接收文字。離線時使用手機上下載好的離線語言包；有網路時由 Google 語音服務處理，可能經過雲端。
 2. **決策**：小幫手是在 WebView 中執行的 Vue 3 網頁。它把句子交給決策器，取得每個工具代號的機率，再依工具表與固定規則決定下一步。
@@ -185,6 +185,7 @@ App 建置參數使用 Flutter 的 `--dart-define`：
 | `LLM_URL` | 空 | 決策器網址；離線版設為 `http://localhost:8080`，即 App 內的 llama-server |
 | `DEV_SERVICE_URL` | 內建網頁 | 開發時指向電腦，例如 `http://<電腦IP>:5180/` |
 | `ASSISTANT_URL` | 空 | 小幫手網址，預設為服務頁同網域的 `/assistant/` |
+| `DEV_TOOLS` | `false` | 設為 `true` 時開啟 WebView 遠端除錯、手機上的覆蓋資料夾與外部模型檔，只供開發測試；`build-release.ps1 -DevTools` 會加上並另存為 `Polaris-offline-DEVTOOLS.apk`，正式版不可加 |
 
 #### Docker 執行方式
 

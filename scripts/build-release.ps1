@@ -60,10 +60,24 @@ finally {
 Step "collect release files → $OutDir"
 New-Item -ItemType Directory -Force $OutDir | Out-Null
 $apk = Join-Path $root 'TownPass\build\app\outputs\flutter-apk\app-release.apk'
+if ($DevTools) {
+  # 測試版：另外取名，不碰要發布的 Polaris-offline.apk、build-info.json 與 SHA256SUMS.txt
+  $devApk = Join-Path $OutDir 'Polaris-offline-DEVTOOLS.apk'
+  Copy-Item $apk $devApk -Force
+  Write-Host "測試版（DEV_TOOLS）→ $devApk；不要上傳。" -ForegroundColor Yellow
+  return
+}
 Copy-Item $apk (Join-Path $OutDir 'Polaris-offline.apk') -Force
 Copy-Item $gguf (Join-Path $OutDir 'gemma-3-270m-decider-Q8_0.gguf') -Force
-$sums = Get-ChildItem $OutDir -File | Where-Object { $_.Extension -in '.apk', '.gguf', '.zip' } | ForEach-Object {
-  '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 $_.FullName).Hash.ToLower(), $_.Name
+# 正式版的出處：final-upload.ps1 會核對 devTools=false 而且雜湊跟 APK 一致
+$apkHash = (Get-FileHash -Algorithm SHA256 (Join-Path $OutDir 'Polaris-offline.apk')).Hash.ToLower()
+$commit = (& git -C $root rev-parse --short HEAD 2>$null)
+if (& git -C $root status --porcelain 2>$null) { $commit = "$commit+dirty" }   # 有未 commit 的修改：APK 不完全等於這個 commit
+$info = [ordered]@{ apk = 'Polaris-offline.apk'; sha256 = $apkHash; devTools = $false; commit = "$commit"; builtAt = (Get-Date).ToString('s') }
+[System.IO.File]::WriteAllText((Join-Path $OutDir 'build-info.json'), ($info | ConvertTo-Json), (New-Object System.Text.UTF8Encoding($false)))
+# SHA256 只列要上傳的三個附件（資料夾裡其他 APK，例如測試版，不列）
+$sums = @('Polaris-offline.apk', 'gemma-3-270m-decider-Q8_0.gguf', 'walkthrough-screenshots.zip') | Where-Object { Test-Path (Join-Path $OutDir $_) } | ForEach-Object {
+  '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 (Join-Path $OutDir $_)).Hash.ToLower(), $_
 }
 [System.IO.File]::WriteAllLines((Join-Path $OutDir 'SHA256SUMS.txt'), $sums, (New-Object System.Text.UTF8Encoding($false)))
 Get-ChildItem $OutDir -File | Format-Table Name, @{ n = 'MB'; e = { [math]::Round($_.Length / 1MB, 1) } } -AutoSize

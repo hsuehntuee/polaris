@@ -1,6 +1,6 @@
 # MATRIX_1K: testset_1k.json (1027 items)
 
-Generated 2026-11-18T18:28:07.068Z
+Generated 2026-11-18T21:19:32.651Z
 
 Composition: tag ambiguous=8, foreign=111, normal=780, oos=128; lang en=153, id=42, th=42, vi=42, zh=663, zh-en=85; style ambiguous=8, asr=155, colloquial=196, english=153, foreign=126, keyword=60, long=119, mixed=85, nearmiss=90, param=35
 
@@ -45,8 +45,8 @@ Rows marked "(n=1052)" were run before 報水表度數 (B) was removed, on the e
 
 | engine | first-round | two-round | NONE detection | avg asks |
 |---|---|---|---|---|
-| cls-nofuse | 74.5% -> 94.7% | 87.3% -> 96.2% | 64.8% -> 90.6% | 0.20 -> 0.04 |
-| cls-fuse | 77.4% -> 94.9% | 89.3% -> 96.8% | 64.1% -> 90.6% | 0.18 -> 0.04 |
+| cls-nofuse (n 1052 -> 1027) | 74.5% -> 94.7% | 87.3% -> 96.2% | 64.8% -> 90.6% | 0.20 -> 0.04 |
+| cls-fuse (n 1052 -> 1027) | 77.4% -> 94.9% | 89.3% -> 96.8% | 64.1% -> 90.6% | 0.18 -> 0.04 |
 | tiny-nofuse | 57.7% -> 66.2% | 71.3% -> 81.7% | 71.1% -> 95.3% | 0.25 -> 0.15 |
 | tiny-fuse | 60.7% -> 72.7% | 73.2% -> 85.4% | 71.1% -> 95.3% | 0.23 -> 0.12 |
 | llm-nofuse | 51.4% -> 93.1% | 60.9% -> 97.2% | 82.0% -> 99.2% | 0.38 -> 0.04 |

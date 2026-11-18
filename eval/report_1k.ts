@@ -44,7 +44,9 @@ const pairs: Array<[string, string]> = [['cls-nofuse-before', 'cls-nofuse-r3'], 
 for (const [a, b] of pairs) {
   const x = byName.get(a), y = byName.get(b);
   if (!x || !y) continue;
-  md += `| ${a.replace('-before', '')} | ${p(x.first_hit)} -> ${p(y.first_hit)} | ${p(x.two_round_hit)} -> ${p(y.two_round_hit)} | ${p(x.oos_detect)} -> ${p(y.oos_detect)} | ${x.avg_asks.toFixed(2)} -> ${y.avg_asks.toFixed(2)} |\n`;
+  // 前後兩次跑的句數不同（拔掉 B 之前是 1,052 句）就標出來：數字只能大致比較
+  const nNote = x.n !== y.n ? ` (n ${x.n} -> ${y.n})` : '';
+  md += `| ${a.replace('-before', '')}${nNote} | ${p(x.first_hit)} -> ${p(y.first_hit)} | ${p(x.two_round_hit)} -> ${p(y.two_round_hit)} | ${p(x.oos_detect)} -> ${p(y.oos_detect)} | ${x.avg_asks.toFixed(2)} -> ${y.avg_asks.toFixed(2)} |\n`;
 }
 md += `\n(llm = shipped LlmDecider, accepts only A-Z answer letters; llmcs = same model scored with lower-case a-m accepted, see eval/llm_cs.ts. r1/r2/r3 = successive cls/tiny data rounds, r3 final.)\n`;
 md += `\n## First-round hit by style\n\n`;

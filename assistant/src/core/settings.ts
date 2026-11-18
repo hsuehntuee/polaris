@@ -68,7 +68,16 @@ export function applyMode(mode: Mode) {
 
 /** 本機（localhost / 127.x / ::1）、區網私有位址（10.x、172.16–31.x、192.168.x、*.local）或同源路徑（/llm） */
 export function isLocalLlmUrl(u: string): boolean {
-  if (/^\/(?!\/)/.test(u)) return true;
+  // 空白、控制字元、反斜線一律不收：URL 解析會吃掉它們（例如 "/\t/evil.com" 會變成 "//evil.com"）
+  if (!u || /[\s\\\u0000-\u001f\u007f]/.test(u)) return false;
+  if (u.startsWith('/')) {
+    // 同源路徑：解析後主機必須沒變（擋掉 //evil.com 這類協定相對網址）
+    try {
+      return new URL(u, 'http://same-origin.invalid/').hostname === 'same-origin.invalid';
+    } catch {
+      return false;
+    }
+  }
   let h = '';
   try {
     const url = new URL(u);

@@ -82,6 +82,9 @@ const server = http.createServer((req, res) => {
     // 只接受本機（這台電腦上的瀏覽器）：伺服器綁 0.0.0.0 給手機看網頁，但區網其他裝置不能改檔案
     const ra = String(req.socket.remoteAddress || '');
     if (!/^(127\.|::1$|::ffff:127\.)/.test(ra)) return send(res, 403, 'save is only allowed from this computer');
+    // 這台電腦的瀏覽器裡開著的其他網站也連得到 127.0.0.1：有 Origin 就必須是這個伺服器自己
+    const origin = String(req.headers.origin || '');
+    if (origin && !/^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(origin)) return send(res, 403, 'save is only allowed from pages served by this dev server');
     const name = String(u.searchParams.get('name') || '').replace(/[^\w.-]/g, '');
     if (!name.endsWith('.json')) return send(res, 400, 'name must be *.json');
     let body = '';
