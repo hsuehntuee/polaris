@@ -520,7 +520,7 @@ p1 + p2 ≥ 0.75     → ASK(前 2 名)
 - **找地點收斂**：使用者已經說了要找什麼（「找廁所」→ 查表 entity = 公廁），到下拉選單那一步直接問「幫你選「公廁」，好嗎？」，好 → 選好、地圖出現標記、進下一步；「我自己選」→ 留給使用者。手機的原生選單打開時網頁什麼都框不到，所以不再等使用者在系統選單裡找。
 - 提示視窗（定位未允許）的「幫我按」之前把重試次數算了兩次，第一次就變成「關不掉」；修掉。
 - **PopPal 泡泡夥伴**：按「小幫手」進來先 1.2 秒泡泡登場動畫（純炫技，`?nosplash` 可關）。
-- **Repo**：`github.com/hsuehntuee/poppal`（私人），GGUF / ONNX 權重走 Git LFS；不含 llama.cpp 執行檔、訓練 checkpoint、HF 合併權重與零樣本向量模型（都可重下／重算）。
+- **Repo**：比賽期間是團隊的私人 repo（GGUF / ONNX 權重走 Git LFS；得獎後整併到市府 repo，權重改放 Release，見第二十輪）；不含 llama.cpp 執行檔、訓練 checkpoint、HF 合併權重與零樣本向量模型（都可重下／重算）。
 - **後端**：展示不需要任何伺服器——網頁、模型、決策全部在 APK 與手機的 llama-server 裡。`deploy/` 的 docker compose（nginx + llama-server）是「有網路時的備援／筆電不在場」用，尚未部署。
 
 ### 第六輪（2026-11-07 夜：遞迴稽核網站版城市通）
@@ -621,6 +621,12 @@ p1 + p2 ≥ 0.75     → ASK(前 2 名)
 - 單選題：題目跟選項一起框（外層只有「題目 + 選項」時框外層）。最後一步不自動躲起來，已經躲著也會出來。問句補充跟主句一樣不重複；「幫我按」用目標第一行字。訂閱項目已經訂閱（`within` 範圍裡看得到「取消訂閱」）就直接完成；`fillLocators` 也填 `within` 的模板。後備挑目標只有定位器真的用到 {{entity}} 才拿實體當目標（找廁所「點地圖標記」不會挑到下拉選單）。
 - `scripts/phone-autowalk.mjs`：真機自動走一個導覽，只做使用者會做的事（點亮框、在亮框的欄位打字、選第一個選項、按面板上的略過／好／大人說可以），每個動作截圖；附件一律略過（不開相簿）。走過：繳水費、繳停車費（含長輩模式）、繳學雜費、繳聯醫醫療費、圖書、有話要說、聯醫掛號、疫苗、訂閱（含已訂閱）、災情通報、意見調查（含小朋友模式）、親子館、警政報案（兩頁）、申辦服務（兩頁）。
 - 真機踩到的環境坑：Samsung 鍵盤的 Galaxy AI 提示鈕被點到會跳出系統頁蓋住 App（`am start` 把 App 帶回前景）；點到上傳鈕會開相簿（`am force-stop com.google.android.photopicker`）。
+
+### 第二十輪（2026-11-19：得獎後整併到市府 repo）
+- 市府要求：把專案上傳到 `taipei-doit/townpass2026-PopPal`，README 涵蓋市府範本的章節（專案簡介、系統架構、安裝與執行、功能說明、AI 使用聲明），11/30 前完成。
+- 根目錄 `README.md` 改成依範本章節的中文版（原本的英文開發說明移到 `docs/DEVELOPMENT.md`）；四張技術圖 `docs/diagrams/`（架構、決策流程、陪伴引導、訓練管線；用 fireworks-tech-graph 的 Style 1 產生，規格在 `docs/diagrams/src/`）、截圖 `docs/screenshots/`、真機流程 GIF `docs/demo/`；`THIRD_PARTY_NOTICES.md`、根目錄 `LICENSE`（GPL-3.0，沿用 TownPass）；`assistant/.env.example`。
+- 修正：`deploy/deploy.ps1` 不再寫死私人伺服器位址（改用 `-Target` 或 `TP_DEPLOY_TARGET`），並把決策器權重一起送上去；`deploy/docker-compose.yml` 原本會下載**沒微調**的 Gemma（在這個任務上幾乎亂猜），改成掛 `tools/llm/out/` 的決策器；`gen_examples.py`、`prompt.ts` 拿掉 Qwen 的字樣。
+- 發佈：`scripts/build-release.ps1`（網頁 → APK assets、llama-server 與模型 → APK，輸出 `release/` 與 SHA256）；`scripts/make-clean-export.ps1`（不帶 git 歷史的乾淨版本、拿掉 LFS、掃敏感字串、只 `git init`）。權重改放 GitHub Release，不走 LFS。
 
 ### 還沒做 / 待驗證
 - 真機：bridge、離線語音、ML Kit 模型下載、路線 B（官方 release 有 `llama-<tag>-bin-android-arm64.tar.gz` 預編好的 Android 二進位，不用自己 NDK 編譯）。

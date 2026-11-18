@@ -1,5 +1,5 @@
-﻿# 編譯 TownPass APK，可選擇直接裝到 USB 連著的手機。
-# 和 dev-phone.ps1 不同：裝好之後不需要電腦掛著，適合 demo / 給別人裝。
+﻿# 編譯「連線版」TownPass APK（網頁從 -Url 載入），可選擇直接裝到 USB 連著的手機。
+# 要做完全離線、內建網頁與模型的正式版，請改用 .\scripts\build-release.ps1。
 #
 # 用法（在 taipei_codefest 資料夾）：
 #   .\build-apk.ps1 -Worktree dev -Install                       # debug 版，裝到手機

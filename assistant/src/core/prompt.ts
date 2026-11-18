@@ -5,7 +5,7 @@ import type { Option, ScoreRequest } from './types';
  * 固定前綴（說明 + 選項 + 少量示範）每次完全相同，llama-server 用 cache_prompt 快取 KV；
  * 每次查詢只變動最後兩行（十幾個 token），再算 1 個輸出 token。
  *
- * 注意：這裡刻意不用 chat template，直接做純文字續寫，Qwen3 就不會進入 thinking。
+ * 注意：這裡刻意不用 chat template，直接做純文字續寫，帶 thinking 模式的模型也不會先輸出思考過程。
  */
 const FEWSHOT = (globalThis as any).process?.env?.PROMPT_FEWSHOT !== '0';
 

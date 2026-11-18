@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-用大模型（llama-server 的 /v1/chat/completions，例如 4090 上的 Qwen3-14B）替每個服務擴增訓練句，
-追加到 tools/tinycls/data/services.jsonl。賽前在 GPU 上跑一次即可；人工抽查後再訓練。
+（選用）用大模型（任何 llama-server 的 /v1/chat/completions，例如 Gemma 3 12B、Breeze 或 TAIDE）替每個服務擴增訓練句，
+追加到 tools/tinycls/data/services.jsonl。需要 GPU；人工抽查後再訓練。
+目前出貨的訓練資料主要來自手寫句、mine_mock.py 與 gen_more_data.py（模板擴增），不依賴這支腳本。
 
-  python tools/tinycls/gen_examples.py --url http://4090:8080 --per 40
+  python tools/tinycls/gen_examples.py --url http://<gpu-host>:8080 --per 40
 """
 import argparse, json, os, sys, urllib.request
 

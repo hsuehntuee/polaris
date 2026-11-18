@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 750" width="1400" height="750" data-generator="fireworks-tech-graph" data-schema-version="1" data-text-metrics="heuristic-v1" data-style-id="1" data-visual-theme="Flat Icon" data-diagram-type="architecture" data-motion-scene="" data-semantic-profile="generic" data-semantic-valid="true" data-quality-profile="showcase" data-max-bends-per-edge="2" data-max-total-bends="8" data-max-route-stretch="1.35" data-max-bridged-crossings="0" data-min-node-gap="40.0" data-min-container-gutter="20.0" data-min-label-clearance="4.0" data-min-segment-length="16.0">
+  <defs>
+    <marker id="arrowA" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowB" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+    </marker>
+    <marker id="arrowC" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowE" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f97316"/>
+    </marker>
+    <marker id="arrowF" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowG" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444"/>
+    </marker>
+    <marker id="arrowH" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+    </marker>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <filter id="shadowGlass" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#020617" flood-opacity="0.28"/>
+    </filter>
+    <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Noto Sans CJK SC', 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', sans-serif; }
+    .title { font-size: 30px; font-weight: 700; fill: #111827; }
+    .subtitle { font-size: 14px; font-weight: 500; fill: #6b7280; }
+    .section { font-size: 13px; font-weight: 700; fill: #2563eb; letter-spacing: 1.4px; }
+    .section-sub { font-size: 12px; font-weight: 500; fill: #64748b; }
+    .node-title { font-weight: 700; fill: #111827; }
+    .node-sub { font-weight: 500; fill: #6b7280; }
+    .node-type { font-size: 12px; font-weight: 700; fill: #64748b; letter-spacing: 0.08em; }
+    .arrow-label { font-size: 12px; font-weight: 600; fill: #6b7280; }
+    .legend { font-size: 12px; font-weight: 500; fill: #6b7280; }
+    .footnote { font-size: 12px; font-weight: 500; fill: #64748b; }
+    .metric-label { font-size: 8.5px; font-weight: 700; fill: #64748b; text-transform: uppercase; }
+    .metric-value { font-size: 9.5px; font-weight: 700; fill: #111827; }
+    </style>
+  </defs>
+  <rect data-graph-role="background" width="1400.0" height="750.0" fill="#ffffff"/>
+  <text x="700.0" y="56" text-anchor="middle" class="title">決策流程：從一句話到「要去哪裡」</text>
+  <text x="700.0" y="82" text-anchor="middle" class="subtitle">模型只做選擇題：一次算出每個工具代號的機率，再交給固定的規則決定</text>
+  <g id="A" data-graph-role="container" data-container-id="A" data-semantic-role="boundary" data-graph-bounds="40,110,1360,250">
+  <rect data-graph-role="container" x="40.0" y="110.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
+  <text x="58.0" y="134.0" class="section">① 算出機率分布</text>
+    <rect id="A-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="116" width="120.22" height="30" fill="none" stroke="none"/>
+  </g>
+  <g id="B" data-graph-role="container" data-container-id="B" data-semantic-role="boundary" data-graph-bounds="40,300,1360,440">
+  <rect data-graph-role="container" x="40.0" y="300.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
+  <text x="58.0" y="324.0" class="section">② 決策規則（門檻 0.75）</text>
+    <rect id="B-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="306" width="177.68" height="30" fill="none" stroke="none"/>
+  </g>
+  <g id="C" data-graph-role="container" data-container-id="C" data-semantic-role="boundary" data-graph-bounds="40,490,1360,630">
+  <rect data-graph-role="container" x="40.0" y="490.0" width="1320.0" height="140.0" rx="16.0" fill="none" stroke="#dbe5f1" stroke-width="1.4" stroke-dasharray="6 5"/>
+  <text x="58.0" y="514.0" class="section">③ 三種結果，下一步都由使用者決定</text>
+    <rect id="C-header" data-graph-role="reserved" data-reserved-kind="container-header" x="48" y="496" width="237.22" height="30" fill="none" stroke="none"/>
+  </g>
+  <path id="e0" data-graph-role="edge" data-edge-id="e0" data-source="say" data-target="lang" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 260,191 L 330,191" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="e1" data-graph-role="edge" data-edge-id="e1" data-source="lang" data-target="llm" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 530,191 L 600,191" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="e2" data-graph-role="edge" data-edge-id="e2" data-source="llm" data-target="second" data-edge-kind="flow" data-topic-id="" data-flow="data" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 800,191 L 870,191" fill="none" stroke="#f97316" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowE)"/>
+  <path id="e3" data-graph-role="edge" data-edge-id="e3" data-source="second" data-target="fuse" data-edge-kind="flow" data-topic-id="" data-flow="data" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 1070,191 L 1140,191" fill="none" stroke="#f97316" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowE)"/>
+  <path id="e4" data-graph-role="edge" data-edge-id="e4" data-source="fuse" data-target="rule" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="1" data-route-stretch="1.0" data-bridges="" d="M 1240,226 L 1240,372 L 800,372" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="e5" data-graph-role="edge" data-edge-id="e5" data-source="rule" data-target="ask" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="1" data-route-stretch="1.0" data-bridges="" d="M 600,381 L 430,381 L 430,536" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="e6" data-graph-role="edge" data-edge-id="e6" data-source="rule" data-target="go" data-edge-kind="flow" data-topic-id="" data-flow="control" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="0" data-route-stretch="1.0" data-bridges="" d="M 700,416 L 700,536" fill="none" stroke="#7c3aed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowA)"/>
+  <path id="e7" data-graph-role="edge" data-edge-id="e7" data-source="rule" data-target="none" data-edge-kind="flow" data-topic-id="" data-flow="feedback" data-motion-role="" data-motion-stage="" data-motion-order="" data-protocol="" data-via="" data-critical-path-id="" data-critical-hop="" data-critical-hops="" data-critical="false" data-bends="1" data-route-stretch="1.0" data-bridges="" d="M 800,390 L 970,390 L 970,536" fill="none" stroke="#ef4444" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowG)"/>
+  <g id="node-say" data-graph-role="node" data-node-id="say" data-semantic-role="user_avatar" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="60,156,260,226">
+  <rect x="60.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#eff6ff" stroke="#3b82f6" stroke-width="2.0"/>
+  <circle cx="86.0" cy="191.0" r="18" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.6"/>
+  <circle cx="86.0" cy="185.0" r="5" fill="#3b82f6"/>
+  <path d="M 76.0 202.0 Q 86.0 193.0 96.0 202.0" fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <text data-text-role="title" data-full-text="一句話" data-text-max-width="124.0" x="124.0" y="197.0" text-anchor="start" class="node-title" font-size="18">一句話</text>
+  <text data-text-role="subtitle" data-full-text="語音或打字" data-text-max-width="124.0" x="124.0" y="219.0" text-anchor="start" class="node-sub" font-size="12">語音或打字</text>
+  </g>
+  <g id="node-lang" data-graph-role="node" data-node-id="lang" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="330,156,530,226">
+  <rect x="330.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="語言判斷" data-text-max-width="176.0" x="430.0" y="191.0" text-anchor="middle" class="node-title" font-size="18">語言判斷</text>
+  <text data-text-role="subtitle" data-full-text="外語先翻成中文" data-text-max-width="176.0" x="430.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">外語先翻成中文</text>
+  </g>
+  <g id="node-llm" data-graph-role="node" data-node-id="llm" data-semantic-role="double_rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,156,800,226">
+  <rect x="600.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#faf5ff" stroke="#8b5cf6" stroke-width="2.0"/>
+  <rect x="606.0" y="162.0" width="188.0" height="58.0" rx="7.0" fill="none" stroke="#8b5cf6" stroke-width="1.2" opacity="0.65"/>
+  <text data-text-role="title" data-full-text="決策器" data-text-max-width="168.0" x="700.0" y="191.0" text-anchor="middle" class="node-title" font-size="18">決策器</text>
+  <text data-text-role="subtitle" data-full-text="Gemma 只算 1 個 token" data-text-max-width="168.0" x="700.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">Gemma 只算 1 個 token</text>
+  </g>
+  <g id="node-second" data-graph-role="node" data-node-id="second" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="870,156,1070,226">
+  <rect x="870.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#faf5ff" stroke="#8b5cf6" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="第二意見" data-text-max-width="176.0" x="970.0" y="191.0" text-anchor="middle" class="node-title" font-size="18">第二意見</text>
+  <text data-text-role="subtitle" data-full-text="說找不到時 e5 再看" data-text-max-width="176.0" x="970.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">說找不到時 e5 再看</text>
+  </g>
+  <g id="node-fuse" data-graph-role="node" data-node-id="fuse" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="1140,156,1340,226">
+  <rect x="1140.0" y="156.0" width="200.0" height="70.0" rx="10.0" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="查表融合" data-text-max-width="176.0" x="1240.0" y="191.0" text-anchor="middle" class="node-title" font-size="18">查表融合</text>
+  <text data-text-role="subtitle" data-full-text="講到項目名就拉高" data-text-max-width="176.0" x="1240.0" y="213.0" text-anchor="middle" class="node-sub" font-size="12">講到項目名就拉高</text>
+  </g>
+  <g id="node-rule" data-graph-role="node" data-node-id="rule" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,346,800,416">
+  <rect x="600.0" y="346.0" width="200.0" height="70.0" rx="10.0" fill="#fff7ed" stroke="#f97316" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="決策規則" data-text-max-width="176.0" x="700.0" y="381.0" text-anchor="middle" class="node-title" font-size="18">決策規則</text>
+  <text data-text-role="subtitle" data-full-text="比較前三名的機率" data-text-max-width="176.0" x="700.0" y="403.0" text-anchor="middle" class="node-sub" font-size="12">比較前三名的機率</text>
+  </g>
+  <g id="node-ask" data-graph-role="node" data-node-id="ask" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="330,536,530,606">
+  <rect x="330.0" y="536.0" width="200.0" height="70.0" rx="10.0" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="追問" data-text-max-width="176.0" x="430.0" y="571.0" text-anchor="middle" class="node-title" font-size="18">追問</text>
+  <text data-text-role="subtitle" data-full-text="2～3 顆按鈕・最多兩輪" data-text-max-width="176.0" x="430.0" y="593.0" text-anchor="middle" class="node-sub" font-size="12">2～3 顆按鈕・最多兩輪</text>
+  </g>
+  <g id="node-go" data-graph-role="node" data-node-id="go" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="600,536,800,606">
+  <rect x="600.0" y="536.0" width="200.0" height="70.0" rx="10.0" fill="#f0fdfa" stroke="#14b8a6" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="直接去" data-text-max-width="176.0" x="700.0" y="571.0" text-anchor="middle" class="node-title" font-size="18">直接去</text>
+  <text data-text-role="subtitle" data-full-text="確認卡：要去【X】嗎？" data-text-max-width="176.0" x="700.0" y="593.0" text-anchor="middle" class="node-sub" font-size="12">確認卡：要去【X】嗎？</text>
+  </g>
+  <g id="node-none" data-graph-role="node" data-node-id="none" data-semantic-role="rect" data-motion-role="" data-motion-stage="" data-motion-order="" data-parent="" data-deployment-id="" data-topic-id="" data-span-id="" data-station-order="" data-status="" data-start-ms="" data-duration-ms="" data-parent-span="" data-graph-bounds="870,536,1070,606">
+  <rect x="870.0" y="536.0" width="200.0" height="70.0" rx="10.0" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8"/>
+  <text data-text-role="title" data-full-text="找不到" data-text-max-width="176.0" x="970.0" y="571.0" text-anchor="middle" class="node-title" font-size="18">找不到</text>
+  <text data-text-role="subtitle" data-full-text="看全部服務・撥 1999" data-text-max-width="176.0" x="970.0" y="593.0" text-anchor="middle" class="node-sub" font-size="12">看全部服務・撥 1999</text>
+  </g>
+  <g id="e0-label" data-graph-role="label" data-owner="e0" data-graph-bounds="276,160,314,180">
+  <rect x="276.0" y="160.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="295.0" y="174.0" text-anchor="middle" class="arrow-label">文字</text>
+  </g>
+  <g id="e1-label" data-graph-role="label" data-owner="e1" data-graph-bounds="546,160,584,180">
+  <rect x="546.0" y="160.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="565.0" y="174.0" text-anchor="middle" class="arrow-label">中文</text>
+  </g>
+  <g id="e2-label" data-graph-role="label" data-owner="e2" data-graph-bounds="816,160,854,180">
+  <rect x="816.0" y="160.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="835.0" y="174.0" text-anchor="middle" class="arrow-label">機率</text>
+  </g>
+  <g id="e3-label" data-graph-role="label" data-owner="e3" data-graph-bounds="1086,160,1124,180">
+  <rect x="1086.0" y="160.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="1105.0" y="174.0" text-anchor="middle" class="arrow-label">機率</text>
+  </g>
+  <g id="e4-label" data-graph-role="label" data-owner="e4" data-graph-bounds="1001,341,1039,361">
+  <rect x="1001.0" y="341.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="1020.0" y="355.0" text-anchor="middle" class="arrow-label">分布</text>
+  </g>
+  <g id="e5-label" data-graph-role="label" data-owner="e5" data-graph-bounds="458.56,350,571.44,370">
+  <rect x="458.56" y="350.0" width="112.88" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="515.0" y="364.0" text-anchor="middle" class="arrow-label">前 2～3 名 ≥ 0.75</text>
+  </g>
+  <g id="e6-label" data-graph-role="label" data-owner="e6" data-graph-bounds="606.68,462,697,482">
+  <rect x="606.68" y="462.0" width="90.32000000000001" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="651.84" y="476.0" text-anchor="middle" class="arrow-label">第一名 ≥ 0.75</text>
+  </g>
+  <g id="e7-label" data-graph-role="label" data-owner="e7" data-graph-bounds="866,377,904,397">
+  <rect x="866.0" y="377.0" width="38.0" height="20" rx="6" fill="#ffffff" opacity="0.94"/>
+  <text x="885.0" y="391.0" text-anchor="middle" class="arrow-label">其他</text>
+  </g>
+  <g id="legend" data-graph-role="legend">
+    <rect id="legend-zone" data-graph-role="reserved" data-reserved-kind="legend" x="38" y="646" width="302" height="46" rx="10" fill="none" stroke="none"/>
+    <line data-graph-role="decoration" x1="48.0" y1="660.0" x2="78.0" y2="660.0" stroke="#7c3aed" stroke-width="2.4" marker-end="url(#arrowA)"/>
+    <text data-graph-role="decoration" x="88.0" y="664.0" class="legend">判斷流程</text>
+    <line data-graph-role="decoration" x1="164.0" y1="660.0" x2="194.0" y2="660.0" stroke="#f97316" stroke-width="2.4" marker-end="url(#arrowE)"/>
+    <text data-graph-role="decoration" x="204.0" y="664.0" class="legend">機率</text>
+    <line data-graph-role="decoration" x1="256.0" y1="660.0" x2="286.0" y2="660.0" stroke="#ef4444" stroke-width="2.4" marker-end="url(#arrowG)"/>
+    <text data-graph-role="decoration" x="296.0" y="664.0" class="legend">出口</text>
+  </g>
+  <g id="footer" data-graph-role="reserved" data-graph-bounds="48,698,230,714">
+  <text x="48.0" y="710.0" class="footnote">按「不是」只把該選項歸零、重新排序，不必再跑一次模型</text>
+  </g>
+</svg>

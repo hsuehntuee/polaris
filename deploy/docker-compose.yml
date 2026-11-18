@@ -1,6 +1,6 @@
-# CPU server 部署（選配；Demo 主線是筆電 + 手機同內網）。
+# 網頁版部署（選配；正式使用是手機上的離線 APK）。
 #   docker compose -f deploy/docker-compose.yml up -d --build
-# 對外：http://<server>:18080/assistant/
+# 對外：http://<server>:18080/assistant/（服務頁在 /，小幫手在 /assistant/）
 services:
   web:
     build:
@@ -14,19 +14,15 @@ services:
 
   llm:
     image: ghcr.io/ggml-org/llama.cpp:server
-    # Gemma 3 270M（Google）Q8_0：第一次啟動會從 Hugging Face 下載（約 300MB）到 volume
+    # 微調過的 Gemma 3 270M 決策器（只輸出 1 個字母）。原版 Gemma 沒有微調，在這個任務上幾乎是亂猜，不能拿來用。
+    # 先把 GitHub Release 的 gemma-3-270m-decider-Q8_0.gguf 放到 tools/llm/out/。
     command: >
-      -hf unsloth/gemma-3-270m-it-GGUF:Q8_0
+      -m /models/gemma-3-270m-decider-Q8_0.gguf
       --host 0.0.0.0 --port 8080
       -c 4096 -np 2 --threads 6
       --cache-reuse 256
-    environment:
-      - LLAMA_ARG_N_PARALLEL=2
     volumes:
-      - llm-cache:/root/.cache/llama.cpp
+      - ../tools/llm/out:/models:ro
     expose:
       - "8080"
     restart: unless-stopped
-
-volumes:
-  llm-cache:

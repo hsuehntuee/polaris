@@ -49,3 +49,8 @@ tools/llm/out_r2/
 
 TownPass/android/.kotlin/
 scripts/.probe.js
+
+# GitHub Release 產物（scripts/build-release.ps1、scripts/make-clean-export.ps1）
+release/
+# 決策器權重放 GitHub Release，不進 git（單檔 292 MB 超過 GitHub 上限）；原 repo 的舊版本仍由 LFS 追蹤
+tools/llm/out/*.gguf

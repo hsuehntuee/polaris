@@ -1,0 +1,460 @@
+{
+  "canvas": {
+    "height": 940.0,
+    "width": 1400.0
+  },
+  "composition": {
+    "limits": {
+      "max_bends_per_edge": 2,
+      "max_bridged_crossings": 0,
+      "max_route_stretch": 1.35,
+      "max_total_bends": 8,
+      "min_container_gutter": 20.0,
+      "min_label_clearance": 4.0,
+      "min_node_gap": 40.0,
+      "min_segment_length": 16.0,
+      "profile": "showcase"
+    },
+    "metrics": {
+      "bridged_crossings": 0,
+      "max_route_stretch": 1.0,
+      "minimum_container_gutter": 20.0,
+      "minimum_node_gap": 70.0,
+      "shortest_segment": 20.4,
+      "total_bends": 5
+    },
+    "ok": true,
+    "profile": "showcase",
+    "score": 100,
+    "violations": []
+  },
+  "edges": [
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e0",
+      "length": 70.0,
+      "route": [
+        [
+          260.0,
+          191.0
+        ],
+        [
+          330.0,
+          191.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "hand",
+      "source_port": [
+        260.0,
+        191.0
+      ],
+      "target": "tmpl",
+      "target_port": [
+        330.0,
+        191.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e1",
+      "length": 70.0,
+      "route": [
+        [
+          530.0,
+          191.0
+        ],
+        [
+          600.0,
+          191.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "tmpl",
+      "source_port": [
+        530.0,
+        191.0
+      ],
+      "target": "sent",
+      "target_port": [
+        600.0,
+        191.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e2",
+      "length": 70.0,
+      "route": [
+        [
+          1140.0,
+          191.0
+        ],
+        [
+          1070.0,
+          191.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "mine",
+      "source_port": [
+        1140.0,
+        191.0
+      ],
+      "target": "sent",
+      "target_port": [
+        1070.0,
+        191.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e3",
+      "length": 70.0,
+      "route": [
+        [
+          260.0,
+          381.0
+        ],
+        [
+          330.0,
+          381.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "crawl",
+      "source_port": [
+        260.0,
+        381.0
+      ],
+      "target": "ui",
+      "target_port": [
+        330.0,
+        381.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e4",
+      "length": 70.0,
+      "route": [
+        [
+          530.0,
+          381.0
+        ],
+        [
+          600.0,
+          381.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "ui",
+      "source_port": [
+        530.0,
+        381.0
+      ],
+      "target": "gemma",
+      "target_port": [
+        600.0,
+        381.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 2,
+      "bridges": [],
+      "crossings": [],
+      "id": "e5",
+      "length": 246.0,
+      "route": [
+        [
+          826.0,
+          226.0
+        ],
+        [
+          826.0,
+          246.4
+        ],
+        [
+          700.0,
+          246.4
+        ],
+        [
+          700.0,
+          346.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "sent",
+      "source_port": [
+        826.0,
+        226.0
+      ],
+      "target": "gemma",
+      "target_port": [
+        700.0,
+        346.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 2,
+      "bridges": [],
+      "crossings": [],
+      "id": "e6",
+      "length": 246.0,
+      "route": [
+        [
+          844.0,
+          226.0
+        ],
+        [
+          844.0,
+          246.4
+        ],
+        [
+          970.0,
+          246.4
+        ],
+        [
+          970.0,
+          346.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "sent",
+      "source_port": [
+        844.0,
+        226.0
+      ],
+      "target": "cls",
+      "target_port": [
+        970.0,
+        346.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e7",
+      "length": 120.0,
+      "route": [
+        [
+          700.0,
+          416.0
+        ],
+        [
+          700.0,
+          536.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "gemma",
+      "source_port": [
+        700.0,
+        416.0
+      ],
+      "target": "gguf",
+      "target_port": [
+        700.0,
+        536.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e8",
+      "length": 120.0,
+      "route": [
+        [
+          970.0,
+          416.0
+        ],
+        [
+          970.0,
+          536.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "cls",
+      "source_port": [
+        970.0,
+        416.0
+      ],
+      "target": "onnx",
+      "target_port": [
+        970.0,
+        536.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 1,
+      "bridges": [],
+      "crossings": [],
+      "id": "e9",
+      "length": 325.0,
+      "route": [
+        [
+          700.0,
+          606.0
+        ],
+        [
+          700.0,
+          761.0
+        ],
+        [
+          870.0,
+          761.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "gguf",
+      "source_port": [
+        700.0,
+        606.0
+      ],
+      "target": "apk",
+      "target_port": [
+        870.0,
+        761.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e10",
+      "length": 120.0,
+      "route": [
+        [
+          970.0,
+          606.0
+        ],
+        [
+          970.0,
+          726.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "onnx",
+      "source_port": [
+        970.0,
+        606.0
+      ],
+      "target": "apk",
+      "target_port": [
+        970.0,
+        726.0
+      ],
+      "waypoints": []
+    },
+    {
+      "bends": 0,
+      "bridges": [],
+      "crossings": [],
+      "id": "e11",
+      "length": 70.0,
+      "route": [
+        [
+          1070.0,
+          761.0
+        ],
+        [
+          1140.0,
+          761.0
+        ]
+      ],
+      "route_stretch": 1.0,
+      "source": "apk",
+      "source_port": [
+        1070.0,
+        761.0
+      ],
+      "target": "eval",
+      "target_port": [
+        1140.0,
+        761.0
+      ],
+      "waypoints": []
+    }
+  ],
+  "input_schema": "v1",
+  "issues": [],
+  "mode": "architecture",
+  "ok": true,
+  "palette": {
+    "below_target": [],
+    "minimum_target": 4.5,
+    "ratios": {
+      "section_sub_fill": 4.76,
+      "text_muted": 4.76,
+      "text_primary": 17.74,
+      "text_secondary": 4.83
+    },
+    "scope": "default opaque canvas text tokens; not a full rendered accessibility audit",
+    "unsupported_tokens": []
+  },
+  "placements": {
+    "legend": {
+      "actual": [
+        48.0,
+        850.0
+      ],
+      "bounds": [
+        38.0,
+        836.0,
+        316.0,
+        882.0
+      ],
+      "moved": false,
+      "requested": [
+        48.0,
+        850.0
+      ]
+    }
+  },
+  "schema_version": 1,
+  "semantics": {
+    "details": {},
+    "ok": true,
+    "profile": "generic",
+    "style": 1,
+    "visual_theme": "Flat Icon"
+  },
+  "style": {
+    "id": 1,
+    "name": "Flat Icon"
+  },
+  "summary": {
+    "bridged_crossings": 0,
+    "edges": 12,
+    "nodes": 12
+  },
+  "text_metrics": "heuristic-v1",
+  "typography": {
+    "complete_text": true,
+    "hint": null,
+    "metrics": "heuristic widths; inspect the actual rendered font",
+    "truncated": []
+  }
+}
