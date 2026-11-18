@@ -16,6 +16,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 . (Join-Path $root 'tools\env.ps1')
+Require-Flutter
 
 $main = Join-Path $root 'TownPass'
 $wt = Join-Path $root "worktrees\$Name"

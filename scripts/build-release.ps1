@@ -14,6 +14,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 . (Join-Path $root 'tools\env.ps1')
+Require-Flutter
 if (-not $OutDir) { $OutDir = Join-Path $root 'release' }
 $gguf = Join-Path $root 'tools\llm\out\gemma-3-270m-decider-Q8_0.gguf'
 if (-not (Test-Path $gguf)) { throw "找不到模型：$gguf" }

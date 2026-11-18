@@ -14,14 +14,14 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 if (-not $Target) { throw '請用 -Target user@host 指定部署主機（或設環境變數 TP_DEPLOY_TARGET）' }
-$ssh = 'C:\Windows\System32\OpenSSH\ssh.exe'
-$scp = 'C:\Windows\System32\OpenSSH\scp.exe'
+$ssh = (Get-Command ssh -ErrorAction Stop).Source
+$scp = (Get-Command scp -ErrorAction Stop).Source
 $root = Split-Path -Parent $PSScriptRoot
 
 if ($Down) { & $ssh $Target "cd ~/$RemoteDir && docker compose -f deploy/docker-compose.yml down"; exit $LASTEXITCODE }
 if ($Logs) { & $ssh $Target "cd ~/$RemoteDir && docker compose -f deploy/docker-compose.yml logs --tail 100"; exit $LASTEXITCODE }
 
-$tar = Join-Path $env:TEMP 'townpass-assistant.tgz'
+$tar = Join-Path ([IO.Path]::GetTempPath()) 'townpass-assistant.tgz'
 Push-Location $root
 try {
   # Windows 內建 bsdtar

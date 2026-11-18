@@ -1,0 +1,13 @@
+# 資料產生與 n-gram 分類器只需要 numpy；e5 分類器與 Gemma 決策器需要其餘套件。
+# GPU 版 PyTorch 請依 https://pytorch.org 的指令安裝對應 CUDA 版本，再裝這個檔案。
+numpy
+torch
+transformers
+peft
+huggingface_hub
+safetensors
+sentencepiece
+protobuf
+onnx
+onnxruntime
+gguf

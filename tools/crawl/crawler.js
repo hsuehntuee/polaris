@@ -101,5 +101,12 @@ window.__crawl = {
     for (const p of Object.values(this.pages)) for (const e of p.elements) if (e.leads_to && e.leads_to.startsWith('/') && !seen.has(e.leads_to) && !/\/(form|detail|result|payment|record|history|search-detail|book-detail|notice-detail|ticket-detail|coupon-detail|hotspot|buy-ticket|item-detail|exchange)\/[^/]+/.test(e.leads_to)) return e.leads_to;
     return null;
   },
+  reset() { this.pages = {}; this.save(); },
+  async scanFully(url, budgetMs) { let r; do { r = await this.scan(url, budgetMs); } while (r.partial); return r; },
+  async all(seeds = ['/'], budgetMs = 34000) {
+    for (const u of seeds) await this.scanFully(u, budgetMs);
+    for (let u = this.next(); u; u = this.next()) await this.scanFully(u, budgetMs);
+    return Object.keys(this.pages).length;
+  },
   dump() { const P = JSON.parse(JSON.stringify(this.pages)); for (const p of Object.values(P)) delete p.done; return JSON.stringify({ version: 1, crawled_at: new Date().toISOString(), pages: P }); }
 };

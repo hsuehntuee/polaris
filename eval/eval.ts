@@ -1,10 +1,10 @@
 /**
  * 評測 CLI：對任何一個引擎跑測試集，輸出 JSON 和 markdown 列。
  *
- *   pnpm eval --engine llm --url http://127.0.0.1:8080 --name Qwen3-0.6B --where laptop-cpu
- *   pnpm eval --engine embed
- *   pnpm eval --engine tiny
- *   選項：--testset <path>（預設 testset.json；千句版用 assistant/public/data/testset_1k.json）--llm-lowercase（LLM 引擎也接受小寫代號 a-m；出貨版 tokenToCode 只收 A-Z）--foreign（含外語 20 句）--fuse（加上 registry 查表融合）--alpha 4 --go 0.75 --ask2 0.75 --ask3 0.75 --api openai --out results/x.json
+ *   pnpm eval --engine llm --url http://127.0.0.1:8080 --name gemma-decider --where laptop-gpu
+ *   pnpm eval --engine cls --fuse
+ *   pnpm eval --engine tiny --fuse
+ *   選項：--testset <path> --foreign --fuse --second cls --alpha 4 --go 0.75 --ask2 0.75 --ask3 0.75 --api openai --out results/x.json
  *
  * 結果放在 eval/results/<name>.json，之後 pnpm matrix 會彙整成測試矩陣。
  */

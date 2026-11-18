@@ -17,6 +17,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 . (Join-Path $root 'tools\env.ps1')
+Require-Flutter
 
 $project = Resolve-TownPassDir $root $Worktree
 $serial = Get-PhoneSerial

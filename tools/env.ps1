@@ -1,21 +1,53 @@
-﻿# 共用環境設定：被 new-worktree.ps1 / dev-phone.ps1 / build-apk.ps1 dot-source 進來。
-# 直接使用 FVM 快取裡的 Flutter 3.47.6（與 TownPass/.fvmrc 一致），
-# 不依賴全域 flutter（C:\flutter\flutter 是舊的 3.24.1），也不需要每個 worktree 各自 `fvm use`。
+﻿# 共用環境：自動找 Flutter、JDK 17、Android SDK。可用環境變數 FLUTTER_HOME、JAVA_HOME、ANDROID_HOME 指定。
 $FlutterVersion = '3.47.6'
-$FlutterHome = Join-Path $env:USERPROFILE "fvm\versions\$FlutterVersion"
-$FlutterBat = Join-Path $FlutterHome 'bin\flutter.bat'
-$DartBat = Join-Path $FlutterHome 'bin\dart.bat'
-if (-not (Test-Path $FlutterBat)) {
-  throw "找不到 Flutter $FlutterVersion：$FlutterBat。請先執行：fvm install $FlutterVersion"
+$OnWindows = ($PSVersionTable.PSEdition -eq 'Desktop') -or $IsWindows
+$HomeDir = if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME }
+$exe = if ($OnWindows) { '.bat' } else { '' }
+
+function First-Existing([string[]]$paths) {
+  foreach ($p in $paths) { if ($p -and (Test-Path $p)) { return (Resolve-Path $p).Path } }
+  return $null
 }
 
-$env:JAVA_HOME = 'C:\Program Files\Microsoft\jdk-17.0.21.21-hotspot'
-$AndroidSdk = Join-Path $env:LOCALAPPDATA 'Android\Sdk'
-$Adb = Join-Path $AndroidSdk 'platform-tools\adb.exe'
-$env:ANDROID_HOME = $AndroidSdk
-$env:Path = "$env:JAVA_HOME\bin;$AndroidSdk\platform-tools;$FlutterHome\bin;$env:Path"
+$FlutterHome = First-Existing @(
+  $env:FLUTTER_HOME,
+  $(if ($env:FVM_CACHE_PATH) { Join-Path $env:FVM_CACHE_PATH "versions\$FlutterVersion" }),
+  $(if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA "fvm\versions\$FlutterVersion" }),
+  (Join-Path $HomeDir "fvm/versions/$FlutterVersion"),
+  (Join-Path $PSScriptRoot "../TownPass/.fvm/flutter_sdk")
+)
+if (-not $FlutterHome) {
+  $onPath = Get-Command "flutter$exe" -ErrorAction SilentlyContinue
+  if ($onPath) { $FlutterHome = Split-Path -Parent (Split-Path -Parent $onPath.Source) }
+}
+$FlutterBat = if ($FlutterHome) { Join-Path $FlutterHome "bin/flutter$exe" } else { $null }
+$DartBat = if ($FlutterHome) { Join-Path $FlutterHome "bin/dart$exe" } else { $null }
 
-# 解析要用哪個 TownPass 資料夾：-Worktree <名稱> → worktrees\<名稱>，否則用主 checkout TownPass\
+function Require-Flutter {
+  if (-not $FlutterBat -or -not (Test-Path $FlutterBat)) { throw "找不到 Flutter $FlutterVersion。執行 fvm install $FlutterVersion，或設定 FLUTTER_HOME" }
+}
+
+if (-not ($env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME 'bin')))) {
+  $jdkRoots = @('C:\Program Files\Microsoft', 'C:\Program Files\Eclipse Adoptium', 'C:\Program Files\Java', 'C:\Program Files\Zulu', '/Library/Java/JavaVirtualMachines', '/usr/lib/jvm')
+  $jdk = foreach ($r in $jdkRoots) { if (Test-Path $r) { Get-ChildItem $r -Directory -Filter '*17*' -ErrorAction SilentlyContinue | Sort-Object Name -Descending } }
+  $studioJbr = First-Existing @('C:\Program Files\Android\Android Studio\jbr', '/Applications/Android Studio.app/Contents/jbr/Contents/Home')
+  $found = if ($jdk) { @($jdk)[0].FullName } else { $studioJbr }
+  if ($found -and (Test-Path (Join-Path $found 'Contents/Home'))) { $found = Join-Path $found 'Contents/Home' }
+  if ($found) { $env:JAVA_HOME = $found }
+}
+
+$AndroidSdk = First-Existing @(
+  $env:ANDROID_HOME, $env:ANDROID_SDK_ROOT,
+  $(if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'Android\Sdk' }),
+  (Join-Path $HomeDir 'Library/Android/sdk'), (Join-Path $HomeDir 'Android/Sdk')
+)
+if ($AndroidSdk) { $env:ANDROID_HOME = $AndroidSdk }
+$Adb = if ($AndroidSdk) { Join-Path $AndroidSdk ("platform-tools/adb" + $(if ($OnWindows) { '.exe' } else { '' })) } else { 'adb' }
+
+$sep = [IO.Path]::PathSeparator
+$extra = @($(if ($env:JAVA_HOME) { Join-Path $env:JAVA_HOME 'bin' }), $(if ($AndroidSdk) { Join-Path $AndroidSdk 'platform-tools' }), $(if ($FlutterHome) { Join-Path $FlutterHome 'bin' })) | Where-Object { $_ }
+$env:Path = (($extra + $env:Path) -join $sep)
+
 function Resolve-TownPassDir([string]$Root, [string]$Worktree) {
   if ($Worktree) {
     $d = Join-Path $Root "worktrees\$Worktree"
@@ -25,11 +57,10 @@ function Resolve-TownPassDir([string]$Root, [string]$Worktree) {
   return (Join-Path $Root 'TownPass')
 }
 
-# 取得第一支已授權的 Android 手機序號
 function Get-PhoneSerial {
   $lines = (& $Adb devices) -match "`tdevice$"
   if (-not $lines) {
-    Write-Host '找不到 Android 手機。請確認：USB 偵錯已開、手機上按了「允許 USB 偵錯」、傳輸線支援資料傳輸。' -ForegroundColor Red
+    Write-Host '找不到 Android 手機。請確認 USB 偵錯已開、手機上已允許這台電腦、傳輸線支援資料傳輸。' -ForegroundColor Red
     & $Adb devices -l
     exit 1
   }

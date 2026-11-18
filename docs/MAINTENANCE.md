@@ -3,6 +3,7 @@
 這份文件寫給接手維護 Polaris 台北通小幫手的人。依照你修改的內容找到對應章節，照順序執行指令即可。
 所有指令都在 repo 根目錄執行，除非另外註明。Windows 用 PowerShell；`.sh` 腳本用 Git Bash。
 
+- [0. 快速指令](#0-快速指令)
 - [1. 專案裡有什麼、不在 git 裡的是什麼](#1-專案裡有什麼不在-git-裡的是什麼)
 - [2. 遷移到新電腦](#2-遷移到新電腦)
 - [3. 重生資料](#3-重生資料)
@@ -11,6 +12,82 @@
 - [6. 打包與發布](#6-打包與發布)
 - [7. 新增一個服務](#7-新增一個服務)
 - [8. 常見問題](#8-常見問題)
+
+---
+
+## 0. 快速指令
+
+從 repo 根目錄依序執行。每一段都可以單獨跑，細節在後面的章節。
+
+**安裝依賴**
+
+```powershell
+pnpm -C TownPass-Services install; pnpm -C assistant install
+pip install -r tools/requirements.txt
+```
+
+**開啟服務**
+
+```powershell
+pnpm -C TownPass-Services build-only; pnpm -C assistant build-only
+node scripts/serve-local.mjs --port 5180
+```
+
+開啟 `http://localhost:5180/assistant/`。
+
+**爬網站地圖**
+
+```powershell
+node --experimental-websocket scripts/crawl.mjs
+```
+
+本機伺服器沒開會自動啟動，結果寫入 `assistant/public/data/sitemap.json`。加 `--fresh` 從首頁重新探索。
+
+**產生訓練資料**
+
+```powershell
+python -I tools/tinycls/mine_mock.py
+python -I tools/registry/build_registry.py
+python -I tools/llm/gen_ui_data.py
+python -I tools/tinycls/gen_more_data.py
+```
+
+依序是：從服務頁擷取句子與項目名稱、重建工具表、由網站地圖產生按鈕選擇題、把核心說法與開頭、結尾、情境、語音錯字交叉組合成訓練句。
+
+**訓練兩個分類頭**
+
+```powershell
+python -I tools/tinycls/train.py --set services --eval
+python -I tools/tinycls/train.py --set commands
+python -I tools/encoder/train_cls.py --eval
+```
+
+n-gram 分類頭只要 numpy，幾秒完成；e5 分類頭建議用 GPU。輸出直接寫進 `assistant/public/models/`。
+
+**重訓 Gemma 決策器**
+
+```powershell
+pnpm -C assistant exec tsx scripts/dump-prompts.ts
+python -I tools/llm/finetune_gemma.py
+```
+
+需要 CUDA GPU，輸出 `tools/llm/out/gemma-3-270m-decider-Q8_0.gguf`。
+
+**評測**
+
+```powershell
+pnpm -C assistant eval --engine cls --fuse --testset ../assistant/public/data/testset_1k.json --foreign
+```
+
+**打包進 App**
+
+```powershell
+pnpm -C TownPass-Services build-only; pnpm -C assistant build-only
+node scripts/bundle-web.mjs
+node scripts/prepare-llama-jni.mjs
+```
+
+網頁與兩個分類頭進 `TownPass/assets/web/`，決策器與 llama-server 進 `TownPass/assets/models/` 與 `jniLibs`。要直接產生 APK 與發布檔，改跑 `.\scripts\build-release.ps1`，輸出在 `release\`。
 
 ---
 
@@ -59,10 +136,10 @@ e5 分類器放在 `assistant/public/models/cls-services/`，大小 27.5 MB；n-
 重訓時需要的 Python 套件：
 
 ```powershell
-pip install torch transformers peft gguf onnx onnxruntime numpy huggingface_hub sentencepiece
+pip install -r tools/requirements.txt
 ```
 
-> ⚠️ `tools/env.ps1` 寫死了 JDK 路徑 `C:\Program Files\Microsoft\jdk-17.0.21.21-hotspot` 與 Flutter 位置 `%USERPROFILE%\fvm\versions\3.47.6`。新電腦的路徑不同時，要修改這個檔案。
+PowerShell 腳本透過 `tools/env.ps1` 自動尋找 Flutter 3.47.6、JDK 17 與 Android SDK，涵蓋 FVM、Android Studio 與常見的 JDK 安裝位置。裝在其他位置時，設定 `FLUTTER_HOME`、`JAVA_HOME` 或 `ANDROID_HOME` 即可。
 
 ### 2.2 取回程式碼與權重
 
@@ -121,18 +198,18 @@ node scripts/serve-local.mjs --port 5180
 
 ### 3.2 重爬網站地圖 → `assistant/public/data/sitemap.json`
 
-爬蟲在瀏覽器裡執行，必須和服務頁同源才能讀取頁面內容：
+```powershell
+node --experimental-websocket scripts/crawl.mjs
+```
 
-1. 用 Chrome 開 `http://localhost:5180/assistant/`，按 F12 開 Console。
-2. 把 `tools/crawl/crawler.js` 整個檔案貼進 Console。
-3. 一頁一頁爬，例如：
-   ```js
-   await __crawl.scan('/');
-   await __crawl.scan('/citizen-report');
-   await __crawl.scan('/fee-payment/others');
-   ```
-   爬過的頁面存在 sessionStorage，可以分好幾次爬。
-4. `__crawl.dump()`，把輸出的 JSON 存成 `assistant/public/data/sitemap.json`。
+腳本會啟動無頭 Chrome，在小幫手頁面載入 `tools/crawl/crawler.js`，從現有網站地圖的每一頁出發，再沿著連結探索新頁面。每一頁會列出可互動元素與穩定選擇器，並實際點擊按鈕記錄跳轉目標與展開內容。
+
+- `--fresh`：只從首頁開始探索
+- `--out <檔案>`：寫到其他檔案，方便和現有版本比較
+- `--port <埠>`：本機伺服器的埠，預設 5180
+- 找不到 Chrome 時，用 `CHROME` 環境變數指定瀏覽器路徑
+
+也可以手動執行：在 `http://localhost:5180/assistant/` 的 Console 貼上 `crawler.js`，執行 `await __crawl.all()`，再用 `__crawl.dump()` 取得 JSON。
 
 ### 3.3 從服務頁挖訓練句與項目名稱 → `tools/tinycls/data/services.mined.jsonl`、`entities.json`
 

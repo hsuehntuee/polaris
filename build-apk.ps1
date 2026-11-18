@@ -14,6 +14,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 . (Join-Path $root 'tools\env.ps1')
+Require-Flutter
 
 if ($Release -and $Url -notlike 'https://*') {
   throw "release 版不允許 http，請用 -Url https://... （目前：$Url）"
