@@ -301,6 +301,8 @@ nginx 容器提供服務頁與小幫手，並將 `/llm/` 轉發到 llama.cpp 容
 
 更新順序、重訓指令、評測方式與遷移到新環境的步驟，都寫在 [docs/MAINTENANCE.md](docs/MAINTENANCE.md)。
 
+移植到其他 Android 機型、iPhone 或網頁版的步驟與驗證方式，寫在 [docs/PORTING.md](docs/PORTING.md)。
+
 ---
 
 ## 授權
