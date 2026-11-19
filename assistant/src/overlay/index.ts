@@ -23,12 +23,14 @@ import { stt, tts, phoneCall, onSttPartial } from '../core/bridge';
 import { normalizeText } from '../engines/tiny';
 import { loadSitemap, findPath, elementsOf, type Sitemap, type SiteElement } from '../core/sitemap';
 import { tplog, hookConsole, onTripleTap, userText } from '../core/log';
+import { isLocalLlmUrl } from '../core/settings';
 
 /* ---------- 設定 ---------- */
 
 const W = window as any;
 const BASE: string = (W.__TP_ASSISTANT_BASE__ as string) || location.origin + '/assistant/';
-const LLM_URL: string = W.__TP_LLM_URL__ || lsGet('tp_assistant_llm_url') || '/llm';
+// App 注入的（正式版是手機上的 localhost:8080）優先；存著的值只接受本機、區網或同源路徑
+const LLM_URL: string = W.__TP_LLM_URL__ || ((u) => (u && isLocalLlmUrl(u) ? u : ''))(lsGet('tp_assistant_llm_url')) || '/llm';
 const STUCK_MS = 45000;
 /** 迷路偵測門檻（放在最前面：boot() 在模組載入時就會呼叫 startLostWatcher，const 不能放後面，否則 TDZ） */
 interface LostCfg {
@@ -1223,6 +1225,8 @@ class Runner {
   async handleUtterance(text: string) {
     if (this.dead || !this.step) return;
     const step = this.step;
+    const tok = this.stepToken;
+    const stale = () => this.dead || tok !== this.stepToken;
     tplog('overlay', 'utterance: ' + userText(text), { step: step.id });
     // 1. 規則
     let cmd: CommandId | null = matchCommandRule(text);
@@ -1239,9 +1243,10 @@ class Runner {
     // 3. 交給決策器（1 個 token）；不確定就用按鈕追問，不猜
     if (!cmd) {
       const res = await this.classifyCommand(text, step);
+      if (stale()) return;
       if (res && typeof res !== 'string') {
         cmd = await this.askCommand(res);
-        if (!cmd) return;
+        if (!cmd || stale()) return;
       } else cmd = res;
     }
     switch (cmd) {
@@ -1316,26 +1321,27 @@ class Runner {
   }
 
   confirming = false;
+  /** 第幾次語音填值：確認中又說了一次，舊的那次回來時什麼都不做 */
+  fillSeq = 0;
 
   async fill(value: string) {
     const el = this.target as HTMLInputElement | null;
     if (!el) return;
+    const seq = ++this.fillSeq;
     this.confirming = true;
     const tok = this.stepToken;
-    setNativeValue(el, value);
+    // 確認之前只顯示在面板上，不寫進頁面：使用者按頁面上的鈕、換步驟、結束導覽，頁面都不會拿到沒確認過的值
     this.ui.setInputValue(value);
     const ok = await this.ui.ask(this.t('guide_fill_confirm', { value }), this.t('guide_fill_yes'), this.t('guide_fill_no'));
+    if (seq !== this.fillSeq) return; // 被新的一次取代
     this.confirming = false;
-    if (tok !== this.stepToken || this.dead) {
-      // 問句被收掉（換了步驟、導覽結束）：使用者沒有確認過的值不留在頁面上
-      if (!ok && document.contains(el) && el.value === value) setNativeValue(el, '');
-      return;
-    }
+    if (tok !== this.stepToken || this.dead || !document.contains(el)) return; // 問句被收掉（換步驟、導覽結束）
     if (ok) {
+      setNativeValue(el, value); // 使用者按了「對」才寫進頁面
       if (this.step?.done_when === 'input') this.advance();
       else this.renderPanel(this.tx(this.step?.say), this.tx(this.step?.more));
     } else {
-      setNativeValue(el, '');
+      this.ui.setInputValue('');
       this.renderPanel(this.tx(this.step?.say), this.tx(this.step?.more));
       this.onVoice();
     }

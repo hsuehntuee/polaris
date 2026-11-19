@@ -44,6 +44,10 @@ try {
     Run 'pnpm' @('install', '--frozen-lockfile') (Join-Path $root 'assistant')
     Run 'pnpm' @('build-only') (Join-Path $root 'assistant')
   }
+  Step 'generate Dart code (flutter_gen, json_serializable)'
+  # lib/gen/*.gen.dart 與 *.g.dart 不在 repo 裡：乾淨 clone 要先產生（在 bundle-web 改 pubspec 之前跑，產生的內容才跟原本的 assets 清單一致）
+  Run $FlutterBat @('pub', 'get') (Join-Path $root 'TownPass')
+  Run $DartBat @('run', 'build_runner', 'build', '--delete-conflicting-outputs') (Join-Path $root 'TownPass')
   Step 'bundle web into the APK assets'
   Run 'node' @('scripts/bundle-web.mjs') $root
   Step 'copy llama-server (Snapdragon build) + model into the APK'
@@ -71,8 +75,16 @@ Copy-Item $apk (Join-Path $OutDir 'Polaris-offline.apk') -Force
 Copy-Item $gguf (Join-Path $OutDir 'gemma-3-270m-decider-Q8_0.gguf') -Force
 # 正式版的出處：final-upload.ps1 會核對 devTools=false 而且雜湊跟 APK 一致
 $apkHash = (Get-FileHash -Algorithm SHA256 (Join-Path $OutDir 'Polaris-offline.apk')).Hash.ToLower()
-$commit = (& git -C $root rev-parse --short HEAD 2>$null)
-if (& git -C $root status --porcelain 2>$null) { $commit = "$commit+dirty" }   # 有未 commit 的修改：APK 不完全等於這個 commit
+$commit = ''
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'   # git 寫到 stderr 的提示（例如 CRLF 警告）不能讓腳本在寫 build-info 之前中斷
+try {
+  $commit = "$(& git -C $root rev-parse --short HEAD 2>$null)".Trim()
+  if ($LASTEXITCODE -ne 0) { $commit = 'unknown' }
+  elseif ("$(& git -C $root status --porcelain 2>$null)".Trim()) { $commit = "$commit+dirty" }   # 有未 commit 的修改：APK 不完全等於這個 commit
+} catch { $commit = 'unknown' }
+finally { $ErrorActionPreference = $prevEap }
+$global:LASTEXITCODE = 0   # 沒有 git 歷史（例如乾淨匯出版）時 git 會留下 128，不能讓整支腳本看起來像失敗
 $info = [ordered]@{ apk = 'Polaris-offline.apk'; sha256 = $apkHash; devTools = $false; commit = "$commit"; builtAt = (Get-Date).ToString('s') }
 [System.IO.File]::WriteAllText((Join-Path $OutDir 'build-info.json'), ($info | ConvertTo-Json), (New-Object System.Text.UTF8Encoding($false)))
 # SHA256 只列要上傳的三個附件（資料夾裡其他 APK，例如測試版，不列）

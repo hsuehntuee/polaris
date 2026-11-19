@@ -160,7 +160,12 @@
 
 #### 方式 C：自行編譯離線版 APK
 
-另需 Flutter 3.47.6、JDK 17、Android SDK，以及 llama.cpp 官方的 `llama-b12180-bin-android-arm64-snapdragon.tar.gz`，解壓到 `tools/llama-android/snapdragon/`。
+另需 Windows PowerShell 5.1 以上、Flutter 3.47.6、JDK 17、Android SDK，以及：
+
+- llama.cpp 官方的 `llama-b12180-bin-android-arm64-snapdragon.tar.gz`：腳本讀 `tools/llama-android/snapdragon/llama-b12180/`，該資料夾內要有 `bin/` 與 `lib/`。
+- Release 的 `gemma-3-270m-decider-Q8_0.gguf`：放到 `tools/llm/out/`，會打包進 APK。
+
+Flutter 的產生檔（`lib/gen/*.gen.dart`、`*.g.dart`）不在 repo 裡，腳本會先執行 `build_runner` 產生；Flutter 的位置可用環境變數 `FLUTTER_HOME` 指定，否則找 fvm 安裝的 3.47.6 或 PATH 上的 `flutter`。
 
 ```powershell
 .\scripts\build-release.ps1
@@ -253,7 +258,7 @@ nginx 容器提供服務頁與小幫手，並將 `/llm/` 轉發到 llama.cpp 容
 
 ### 2. 使用範圍
 
-- **程式碼產生**：小幫手前端、陪伴引導層、Flutter 原生橋接、App 內推論服務、訓練與評測腳本，大部分在 Claude Code 協助下完成，約佔總程式碼的〔請填寫比例〕。
+- **程式碼產生**：小幫手前端、陪伴引導層、Flutter 原生橋接、App 內推論服務、訓練與評測腳本，大部分在 Claude Code 協助下完成，約佔總程式碼及相關文件的 80 %。
 - **UI/UX 設計協助**：陪伴模式的互動規則由團隊提出並在實機上反覆修正，AI 協助實作與版面調整。
 - **文字生成**：README、規格書 `SPEC.md`、開發文件，以及五種語言介面文案的初稿與潤飾。
 - **測試案例 / 文件生成**：1,027 句決策器測試集、評測矩陣腳本、網站遞迴稽核與實機自動操作腳本。

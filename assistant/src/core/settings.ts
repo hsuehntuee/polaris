@@ -48,14 +48,15 @@ export const settings = {
   set engine(v: EngineKind) {
     set(K.engine, v);
   },
-  /** LLM 網址：?llm=... > localStorage > VITE_LLM_URL > /llm */
+  /** LLM 網址：?llm=...（開發用，只收本機／區網）> App 注入 > localStorage > VITE_LLM_URL > /llm */
   get llmUrl(): string {
     // 網址參數 / 存著的值只接受本機、區網或同源路徑：不讓一條連結把之後的查詢導到外部伺服器
     const q = new URLSearchParams(location.search).get('llm');
     const okQ = q && isLocalLlmUrl(q) ? q : '';
     if (okQ) set(K.llmUrl, okQ);
     const stored = get(K.llmUrl);
-    return okQ || (stored && isLocalLlmUrl(stored) ? stored : '') || (window as any).__TP_LLM_URL__ || (import.meta as any).env?.VITE_LLM_URL || '/llm';
+    // App 注入的網址（正式版是手機上的 localhost:8080）比存著的值優先：用 ?llm= 存過的區網位址不會蓋掉它
+    return okQ || (window as any).__TP_LLM_URL__ || (stored && isLocalLlmUrl(stored) ? stored : '') || (import.meta as any).env?.VITE_LLM_URL || '/llm';
   },
   set llmUrl(v: string) {
     if (isLocalLlmUrl(v)) set(K.llmUrl, v);
