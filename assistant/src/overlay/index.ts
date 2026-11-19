@@ -1216,9 +1216,10 @@ class Runner {
     const off = onSttPartial((t) => this.ui.live('「' + t + '」'));
     const r = await stt(this.copy.stt_lang || 'zh-TW').catch(() => ({ text: '' }));
     off();
-    if (this.dead || this.step !== step) return; // 聽的時候導覽結束或換了步驟：結果不用了（不要復活已結束的導覽）
+    // 先收掉「聆聽中」：不管結果還用不用得到，畫面都不能停在聽的狀態
     this.ui.live('');
     this.ui.setListening(false);
+    if (this.dead || this.step !== step) return; // 聽的時候導覽結束或換了步驟：結果不用了（不要復活已結束的導覽）
     if (r.text) this.ui.flash(this.t('guide_heard') + r.text);
     const text = (r.text || '').trim();
     if (!text) return this.ui.flash(this.t('guide_unknown'));
@@ -2170,6 +2171,10 @@ class Ui {
 
   /** 多選一的追問 */
   choices(q: string, opts: PanelButton[]) {
+    // 選項會蓋掉面板上的問句：等待中的問句要先回答「沒回答」，不然等它的流程（語音填值確認）會一直卡著
+    const prev = this.pendingAsk;
+    this.pendingAsk = null;
+    prev?.(null);
     this.askEl.innerHTML = '';
     const p = document.createElement('div');
     p.textContent = q;
