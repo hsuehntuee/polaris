@@ -1,6 +1,6 @@
 # MATRIX_1K: testset_1k.json (1027 items)
 
-Generated 2026-11-18T21:19:32.651Z
+Generated 2026-11-19T04:13:13.904Z
 
 Composition: tag ambiguous=8, foreign=111, normal=780, oos=128; lang en=153, id=42, th=42, vi=42, zh=663, zh-en=85; style ambiguous=8, asr=155, colloquial=196, english=153, foreign=126, keyword=60, long=119, mixed=85, nearmiss=90, param=35
 
@@ -36,6 +36,7 @@ Rows marked "(n=1052)" were run before 報水表度數 (B) was removed, on the e
 | tiny-fuse-r1 | laptop (n=1052) | 60.7% | 73.2% | 71.1% | 0.23 | 0 ms |  |
 | tiny-fuse-r2 | laptop (n=1052) | 70.6% | 85.5% | 95.3% | 0.15 | 1 ms |  |
 | tiny-fuse-r3 | laptop (n=1052) | 72.7% | 85.4% | 95.3% | 0.12 | 1 ms |  |
+| tiny-fuse-review | laptop | 72.5% | 84.9% | 95.3% | 0.12 | 1 ms |  |
 | tiny-nofuse-before | laptop (n=1052) | 57.7% | 71.3% | 71.1% | 0.25 | 0 ms |  |
 | tiny-nofuse-r1 | laptop (n=1052) | 57.7% | 71.3% | 71.1% | 0.25 | 0 ms |  |
 | tiny-nofuse-r2 | laptop (n=1052) | 65.2% | 81.4% | 95.3% | 0.16 | 0 ms |  |
@@ -84,6 +85,7 @@ Rows marked "(n=1052)" were run before 報水表度數 (B) was removed, on the e
 | tiny-fuse-r1 | 78.4% | 92.7% | 54.1% | 78.9% | 80.0% | 47.4% | 56.8% | 88.6% | 3.6% | 62.5% | 71.1% |
 | tiny-fuse-r2 | 83.0% | 96.4% | 73.9% | 86.6% | 86.7% | 56.3% | 51.4% | 94.3% | 28.8% | 50.0% | 95.3% |
 | tiny-fuse-r3 | 85.0% | 96.4% | 80.2% | 85.2% | 81.3% | 60.0% | 63.5% | 97.1% | 27.9% | 62.5% | 95.3% |
+| tiny-fuse-review | 85.0% | 96.4% | 80.2% | 85.2% | 81.3% | 60.0% | 63.5% | 97.1% | 27.9% | 62.5% | 95.3% |
 | tiny-nofuse-before | 73.2% | 92.7% | 50.5% | 77.5% | 78.7% | 42.2% | 56.8% | 80.0% | 2.7% | 62.5% | 71.1% |
 | tiny-nofuse-r1 | 73.2% | 92.7% | 50.5% | 77.5% | 78.7% | 42.2% | 56.8% | 80.0% | 2.7% | 62.5% | 71.1% |
 | tiny-nofuse-r2 | 75.8% | 96.4% | 55.0% | 84.5% | 84.0% | 51.9% | 45.9% | 88.6% | 28.8% | 50.0% | 95.3% |

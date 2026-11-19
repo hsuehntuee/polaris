@@ -573,9 +573,12 @@ class Runner {
     const preKey = step.prefill ?? step.id;
     const pre = this.state.params?.[preKey];
     if (pre && step.accept && (el as HTMLInputElement).value === '') {
-      delete this.state.params![preKey];
-      saveState(this.state);
-      this.fill(pre);
+      const params = this.state.params!;
+      void this.fill(pre).then((answered) => {
+        if (answered === null || params[preKey] !== pre) return;
+        delete params[preKey];
+        if (!this.dead) saveState(this.state);
+      });
     }
 
     // 下拉選單：使用者已經說了要哪一個（例如「找廁所」→ 公廁）→ 直接幫他選好並確認，
@@ -585,7 +588,7 @@ class Runner {
       const v = this.selectValue;
       const token = this.stepToken;
       const ok = await this.ui.ask(this.t('guide_select_confirm', { text: v.text }), this.t('guide_confirm_yes'), this.t('guide_self_pick'));
-      if (token !== this.stepToken) return;
+      if (ok === null || token !== this.stepToken) return;
       if (ok) {
         const sel = el as HTMLSelectElement;
         sel.value = v.value;
@@ -1267,7 +1270,7 @@ class Runner {
         if (text.length < 4) return this.ui.flash(this.t('guide_unknown'));
         const tok = this.stepToken;
         const ok = await this.ui.ask(this.t('guide_other_q') + `「${text}」`, this.t('guide_confirm_yes'), this.t('guide_confirm_no'));
-        if (tok !== this.stepToken || this.dead) return;
+        if (ok === null || tok !== this.stepToken || this.dead) return;
         if (ok) {
           clearState();
           location.href = `${BASE}?q=${encodeURIComponent(text)}&lang=${this.state.lang}`;
@@ -1324,18 +1327,20 @@ class Runner {
   /** 第幾次語音填值：確認中又說了一次，舊的那次回來時什麼都不做 */
   fillSeq = 0;
 
-  async fill(value: string) {
+  /** 語音填值：true＝按了「對」、false＝按了「重說」、null＝沒回答（被收掉或取代） */
+  async fill(value: string): Promise<boolean | null> {
     const el = this.target as HTMLInputElement | null;
-    if (!el) return;
+    if (!el) return null;
     const seq = ++this.fillSeq;
     this.confirming = true;
     const tok = this.stepToken;
     // 確認之前只顯示在面板上，不寫進頁面：使用者按頁面上的鈕、換步驟、結束導覽，頁面都不會拿到沒確認過的值
     this.ui.setInputValue(value);
     const ok = await this.ui.ask(this.t('guide_fill_confirm', { value }), this.t('guide_fill_yes'), this.t('guide_fill_no'));
-    if (seq !== this.fillSeq) return; // 被新的一次取代
+    if (seq !== this.fillSeq) return null; // 被新的一次取代
     this.confirming = false;
-    if (tok !== this.stepToken || this.dead || !document.contains(el)) return; // 問句被收掉（換步驟、導覽結束）
+    // 問句被收掉或取代（換步驟、導覽結束、頁面重繪、別的問句）：使用者沒回答
+    if (ok === null || tok !== this.stepToken || this.dead || !document.contains(el)) return null;
     if (ok) {
       setNativeValue(el, value); // 使用者按了「對」才寫進頁面
       if (this.step?.done_when === 'input') this.advance();
@@ -1345,6 +1350,7 @@ class Runner {
       this.renderPanel(this.tx(this.step?.say), this.tx(this.step?.more));
       this.onVoice();
     }
+    return ok;
   }
 
   armStuck() {
@@ -1352,11 +1358,14 @@ class Runner {
     this.stuckTimer = window.setTimeout(async () => {
       if (!this.step) return;
       if (this.collapsed) return this.expand(); // 躲著但使用者卡住了 → 出來
+      // 使用者正在回答別的問題（付款確認、語音填值）：不要用「卡住了嗎」蓋掉它，晚一點再看
+      if (this.dead) return;
+      if (this.confirming || this.ui.hasPendingAsk()) return this.armStuck();
       const tok = this.stepToken;
       const ok = await this.ui.ask(this.t('guide_stuck'), this.t('guide_help'), '1999');
-      if (tok !== this.stepToken || this.dead) return; // 問句被收掉（換了步驟）：不是使用者的回答，絕不撥號
+      if (ok === null || tok !== this.stepToken || this.dead) return; // 問句被收掉或取代：不是使用者的回答，絕不撥號
       if (ok) this.help();
-      else phoneCall('1999');
+      else phoneCall('1999'); // 使用者自己按了「1999」
     }, STUCK_MS);
   }
 
@@ -2014,13 +2023,18 @@ class Ui {
     this.more.classList.add('on');
   }
 
-  /** 等待中的問句（收掉或被新問句取代時回答「否」） */
-  private pendingAsk: ((v: boolean) => void) | null = null;
+  /** 等待中的問句（收掉或被新問句取代時回答 null：使用者沒回答，不能當成「否」） */
+  private pendingAsk: ((v: boolean | null) => void) | null = null;
+
+  /** 面板上有沒有一個還沒回答的問句 */
+  hasPendingAsk(): boolean {
+    return !!this.pendingAsk;
+  }
 
   cancelAsk() {
     const pending = this.pendingAsk;
     this.pendingAsk = null;
-    pending?.(false);
+    pending?.(null);
     if (!this.askEl.classList.contains('on')) return;
     this.askEl.classList.remove('on');
     this.askEl.innerHTML = '';
@@ -2028,11 +2042,12 @@ class Ui {
   }
 
   /** 在面板裡問一個是/否的問題 */
-  ask(q: string, yes: string, no: string): Promise<boolean> {
-    // 前一個問句還沒回答就被取代：當作「否」
+  /** 回傳 true＝是、false＝使用者按了否、null＝問句被收掉或取代（使用者沒回答） */
+  ask(q: string, yes: string, no: string): Promise<boolean | null> {
+    // 前一個問句還沒回答就被取代：它的結果是「沒回答」
     const prev = this.pendingAsk;
     this.pendingAsk = null;
-    prev?.(false);
+    prev?.(null);
     return new Promise((resolve) => {
       this.pendingAsk = resolve;
       this.askEl.innerHTML = '';

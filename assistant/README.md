@@ -32,10 +32,12 @@ cd .. && node scripts/serve-local.mjs --port 5180
 
 | 引擎 | 模型 | 大小與延遲 | 1,027 句測試集：第一輪、兩輪內、範圍外辨識 |
 |---|---|---|---|
-| `llm` | Gemma 3 270M 微調為單一 token 決策器，GGUF Q8_0 | 292 MB，手機 NPU 63 ms | 93.2%、97.3%、99.2% |
+| `llm` | Gemma 3 270M 微調為單一 token 決策器，GGUF Q8_0 | 292 MB，筆電 GPU 45 ms，手機 NPU 63 ms | 93.4%、97.4%、99.2% |
 | `cls` | multilingual-e5-small 微調分類器，ONNX int8 | 27.5 MB，6 ms | 94.9%、96.8%、90.6% |
-| `tiny` | 字元 n-gram 分類器 | 2 MB，1 ms 以內 | 72.7%、85.4%、95.3% |
-| `embed` | e5-small 零樣本相似度，僅供對照 | 118 MB，6 ms | 50.4%、63.7%、49.2% |
+| `tiny` | 字元 n-gram 分類器 | 2 MB，1 ms 以內 | 72.5%、84.9%、95.3% |
+| `embed` | e5-small 零樣本相似度，僅供對照 | 118 MB，6 ms | 舊版 1,052 句：50.4%、63.7%、49.2% |
+
+延遲為筆電量測，手機 NPU 的數字見 `eval/PHONE.md`。
 
 `auto` 的順序：App 內的 llama-server、設定的 LLM 網址、`cls`、`tiny`、`embed`，使用第一個可用的引擎。
 
