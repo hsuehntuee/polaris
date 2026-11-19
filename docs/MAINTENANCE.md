@@ -422,7 +422,7 @@ App 會優先使用 `/sdcard/Android/data/com.example.townpass/files/gguf/` 裡�
 | `finetune_gemma.py` 一開始就停止，說 prompt 不一致 | 先在 `assistant/` 跑 `pnpm -s tsx scripts/dump-prompts.ts` |
 | PowerShell 腳本出現亂碼或解析錯誤 | 含中文的 `.ps1` 要存成含 BOM 的 UTF-8，Windows PowerShell 5.1 不認得沒有 BOM 的 UTF-8 |
 | 手機上的陪伴引導層沒出現 | 覆蓋資料夾裡可能有舊版：`sh scripts/phone-push-web.sh --clear` |
-| 離線語音辨識失敗 | 手機要先下載離線語言包：Google App → Settings → Voice → Offline speech recognition |
+| 離線語音辨識失敗 | 手機要先下載離線語言包：手機設定的鍵盤清單 → Google 語音輸入 → 管理離線語言 → 「國語（台灣）」與「English (US)」。App 離線時中文會用 `cmn-Hant-TW` 向 Google 語音服務要求這個包 |
 | 外語翻譯在飛航模式下失敗 | ML Kit 翻譯模型要在有網路時先用過一次，每個語言約 30 MB |
 | 麥克風用一用 App 被關掉 | 權限選了僅限這次，改成使用 App 時允許 |
 | 地圖底圖是空白 | OpenStreetMap 圖磚需要網路；標記與清單離線也能用 |

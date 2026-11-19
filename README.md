@@ -127,7 +127,7 @@
 手機需求與設定：
 
 - 決策器需要 arm64 Android。Snapdragon 的 Hexagon NPU 最快，實測機型為 Galaxy S26 Ultra；沒有 NPU 時改用 CPU，或自動改用 e5 分類器。
-- 離線語音：在 Google App 的 Settings、Voice、Offline speech recognition 下載中文台灣與 English (US)。
+- 離線語音：手機設定的鍵盤清單 → Google 語音輸入（Google Voice Typing）→ 管理離線語言，下載「國語（台灣）」與「English (US)」。沒有下載時，有網路仍可用語音，由 Google 語音服務處理。
 - 外語翻譯：越南語、印尼語、泰語的翻譯模型在第一次翻譯時自動下載，每個約 30 MB，之後可離線使用。
 
 #### 方式 B：在電腦瀏覽器執行網頁版
