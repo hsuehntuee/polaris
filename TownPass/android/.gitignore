@@ -11,3 +11,6 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Gradle 在 android/ 底下產生的報告（例如中斷的編譯留下的 problems-report）
+/build/
